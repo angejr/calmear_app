@@ -1,0 +1,26 @@
+# Node
+node_modules/
+.pnp
+.pnp.js
+
+# Nuxt
+.nuxt/
+.output/
+.data/
+dist/
+
+# Environment (NEVER commit secrets)
+.env
+.env.*
+!.env.example
+
+# Drizzle generated
+drizzle/migrations/*.sql
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+*.local
