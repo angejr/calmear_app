@@ -11,6 +11,7 @@ interface Entitlement {
 interface UserData { id: string; email: string | null; subscriptionStatus: string }
 
 const { data, pending, error, refresh } = await useFetch<{ user: UserData; entitlement: Entitlement }>('/api/user/me')
+console.log(data)
 
 const pairingCodeVal = ref<string | null>(null)
 const pairingExpiry = ref<string | null>(null)
@@ -72,6 +73,29 @@ async function manageSubscription() {
 const route = useRoute()
 const checkoutSuccess = computed(() => route.query.checkout === 'success')
 
+// After Stripe redirects with ?checkout=success the webhook may arrive a few seconds late.
+// Poll every 2s up to 30s until the plan becomes premium, then stop.
+const pollTimer = ref(null)
+const pollAttempts = ref(0)
+const MAX_POLL = 15
+
+onMounted(() => {
+  if (checkoutSuccess.value) {
+    pollTimer.value = setInterval(async () => {
+      pollAttempts.value++
+      await refresh()
+      if (data.value?.entitlement.plan === 'premium' || pollAttempts.value >= MAX_POLL) {
+        clearInterval(pollTimer.value)
+        pollTimer.value = null
+      }
+    }, 2000)
+  }
+})
+
+onUnmounted(() => {
+  if (pollTimer.value) clearInterval(pollTimer.value)
+})
+
 function formatDate(iso?: string | null): string {
   if (!iso) return '—'
   return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -94,11 +118,16 @@ function daysRemaining(iso?: string | null): number {
         <UserButton />
       </div>
 
-      <div v-if="checkoutSuccess" class="mb-6 rounded-xl bg-green-50 border border-green-200 p-4 flex gap-3">
-        <span class="text-green-500 text-xl">✓</span>
+      <div v-if="checkoutSuccess" class="mb-6 rounded-xl border p-4 flex gap-3"
+        :class="data?.entitlement.plan === 'premium' ? 'bg-green-50 border-green-200' : 'bg-blue-50 border-blue-200'">
+        <span class="text-xl">{{ data?.entitlement.plan === 'premium' ? '✓' : '⏳' }}</span>
         <div>
-          <p class="font-semibold text-green-800">Subscription activated!</p>
-          <p class="text-sm text-green-700">Premium is now active. The extension picks up changes automatically.</p>
+          <p class="font-semibold" :class="data?.entitlement.plan === 'premium' ? 'text-green-800' : 'text-blue-800'">
+            {{ data?.entitlement.plan === 'premium' ? 'Subscription activated!' : 'Confirming your subscription…' }}
+          </p>
+          <p class="text-sm" :class="data?.entitlement.plan === 'premium' ? 'text-green-700' : 'text-blue-700'">
+            {{ data?.entitlement.plan === 'premium' ? 'Premium is now active. The extension picks up changes automatically.' : 'Please wait while we confirm your payment with Stripe…' }}
+          </p>
         </div>
       </div>
 

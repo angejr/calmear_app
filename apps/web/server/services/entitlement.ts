@@ -42,11 +42,12 @@ export function computeEntitlement(user: User): CalmEarEntitlement {
   const trialEndsAt = user.trialEndsAt ?? null
   const subscriptionEndsAt = user.subscriptionCurrentPeriodEnd ?? null
 
-  // Premium: active Stripe subscription
-  const hasPremium =
-    ACTIVE_SUBSCRIPTION_STATUSES.has(user.subscriptionStatus) &&
-    subscriptionEndsAt !== null &&
-    subscriptionEndsAt > now
+  // Premium: active Stripe subscription.
+  // Stripe's subscriptionStatus is authoritative. We do NOT gate on
+  // subscriptionCurrentPeriodEnd because in the Stripe Basil API the top-level
+  // current_period_end moved to sub.items.data[0].current_period_end and may be
+  // null in the DB. subscriptionEndsAt is used for display only.
+  const hasPremium = ACTIVE_SUBSCRIPTION_STATUSES.has(user.subscriptionStatus)
 
   if (hasPremium) {
     return {
@@ -54,7 +55,7 @@ export function computeEntitlement(user: User): CalmEarEntitlement {
       active: true,
       plan: 'premium',
       trialEndsAt: trialEndsAt?.toISOString() ?? null,
-      subscriptionEndsAt: subscriptionEndsAt!.toISOString(),
+      subscriptionEndsAt: subscriptionEndsAt?.toISOString() ?? null,
     }
   }
 

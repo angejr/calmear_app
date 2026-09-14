@@ -1,39 +1,36 @@
 import { requireClerkAuth } from '../../utils/auth'
 import { ensureUser, updateUserStripe } from '../../services/users'
 import { findOrCreateStripeCustomer, getPriceId, useStripe } from '../../services/stripe'
-import type { PlanKey } from '../../../config/pricing'
+import { computeEntitlement } from '../../services/entitlement'
 
-const ALLOWED_PLANS: PlanKey[] = ['monthly', 'yearly']
+const ALLOWED_PLANS = ['monthly', 'yearly'] as const
 
-/**
- * POST /api/billing/checkout
- *
- * Creates a Stripe Checkout session for the authenticated user.
- * The client sends only a plan key ("monthly" | "yearly") — never a Stripe Price ID.
- * Server maps the plan key to the configured Price ID.
- *
- * Authentication: Clerk session (website cookie)
- */
 export default defineEventHandler(async (event) => {
   const clerkUserId = await requireClerkAuth(event)
 
   const body = await readBody(event)
-  const plan = body?.plan as string
+  const plan = body?.plan
 
-  if (!ALLOWED_PLANS.includes(plan as PlanKey)) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: `Invalid plan. Must be one of: ${ALLOWED_PLANS.join(', ')}`,
-    })
+  if (!ALLOWED_PLANS.includes(plan)) {
+    throw createError({ statusCode: 400, statusMessage: 'Invalid plan. Must be monthly or yearly.' })
   }
 
   const user = await ensureUser(clerkUserId)
+
+  // Block duplicate checkout: if already Premium, redirect to portal instead
+  const currentEntitlement = computeEntitlement(user)
+  if (currentEntitlement.plan === 'premium') {
+    throw createError({
+      statusCode: 409,
+      statusMessage: 'You already have an active Premium subscription. Use the billing portal to manage it.',
+    })
+  }
+
   const stripe = useStripe()
-  const priceId = getPriceId(plan as PlanKey)
+  const priceId = getPriceId(plan)
   const config = useRuntimeConfig()
   const appUrl = config.public.appUrl
 
-  // Find or create a Stripe Customer for this user
   const stripeCustomerId = await findOrCreateStripeCustomer({
     email: user.email,
     calmearUserId: user.id,
@@ -41,30 +38,18 @@ export default defineEventHandler(async (event) => {
     existingStripeCustomerId: user.stripeCustomerId,
   })
 
-  // Persist the customer ID if it's new
   if (!user.stripeCustomerId) {
     await updateUserStripe(clerkUserId, { stripeCustomerId })
   }
 
-  // Create Stripe Checkout session
-  // NOTE: We do NOT use Stripe's trial_period_days here because CalmEar's trial
-  // is application-managed and does NOT require a credit card.
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
     customer: stripeCustomerId,
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${appUrl}/dashboard?checkout=success`,
     cancel_url: `${appUrl}/pricing?checkout=cancelled`,
-    metadata: {
-      calmearUserId: user.id,
-      clerkUserId,
-    },
-    subscription_data: {
-      metadata: {
-        calmearUserId: user.id,
-        clerkUserId,
-      },
-    },
+    metadata: { calmearUserId: user.id, clerkUserId },
+    subscription_data: { metadata: { calmearUserId: user.id, clerkUserId } },
     allow_promotion_codes: true,
   })
 

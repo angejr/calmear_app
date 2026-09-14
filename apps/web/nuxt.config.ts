@@ -7,8 +7,8 @@ export default defineNuxtConfig({
   modules: ['@clerk/nuxt', '@nuxtjs/tailwindcss', '@nuxt/eslint'],
   clerk: {
     skipServerMiddleware: false,
-    afterSignInUrl: '/dashboard',
-    afterSignUpUrl: '/dashboard',
+    signInFallbackRedirectUrl: '/dashboard',
+    signUpFallbackRedirectUrl: '/dashboard',
   },
   css: ['~/assets/css/main.css'],
   runtimeConfig: {

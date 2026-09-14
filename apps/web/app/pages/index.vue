@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { PRICING } from '../../config/pricing'
+const { isSignedIn } = useUser()
 useSeoMeta({
   title: 'CalmEar — Enjoy YouTube without distracting mouth sounds',
   description: 'CalmEar detects and reduces mouth smacks in your browser. 30-day free trial.',
@@ -27,7 +28,8 @@ const steps = [
           CalmEar detects and reduces mouth smacks directly in your browser — so you can focus on what you want to watch.
         </p>
         <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <SignUpButton mode="modal"><button class="btn-primary text-base px-8 py-4">Try CalmEar Free</button></SignUpButton>
+          <NuxtLink v-if="isSignedIn" to="/dashboard" class="btn-primary text-base px-8 py-4">Go to Dashboard</NuxtLink>
+          <SignUpButton v-else mode="modal"><button class="btn-primary text-base px-8 py-4">Try CalmEar Free</button></SignUpButton>
           <NuxtLink to="#how-it-works" class="btn-secondary text-base px-8 py-4">See How It Works</NuxtLink>
         </div>
         <p class="mt-4 text-sm text-neutral-500">{{ PRICING.trial.durationDays }}-day free trial · No credit card required</p>
@@ -82,14 +84,14 @@ const steps = [
             <div class="text-sm font-semibold text-primary-600 mb-1">Free Trial</div>
             <div class="text-3xl font-bold text-neutral-900 mb-1">{{ PRICING.trial.durationDays }} days</div>
             <div class="text-sm text-neutral-500 mb-6">No credit card required</div>
-            <SignUpButton mode="modal"><button class="btn-outline text-sm py-2 px-5 w-full">Start Free Trial</button></SignUpButton>
+            <NuxtLink v-if="isSignedIn" to="/dashboard" class="btn-outline text-sm py-2 px-5 w-full text-center">Go to Dashboard</NuxtLink><SignUpButton v-else mode="modal"><button class="btn-outline text-sm py-2 px-5 w-full">Start Free Trial</button></SignUpButton>
           </div>
           <div class="card flex flex-col items-center text-center p-8">
             <div class="text-2xl mb-3">📅</div>
             <div class="text-sm font-semibold text-neutral-600 mb-1">Monthly</div>
             <div class="text-3xl font-bold text-neutral-900 mb-1">{{ PRICING.monthly.price }}</div>
             <div class="text-sm text-neutral-500 mb-6">per month</div>
-            <SignUpButton mode="modal"><button class="btn-secondary text-sm py-2 px-5 w-full">Get Started</button></SignUpButton>
+            <NuxtLink v-if="isSignedIn" to="/dashboard" class="btn-secondary text-sm py-2 px-5 w-full text-center">Go to Dashboard</NuxtLink><SignUpButton v-else mode="modal"><button class="btn-secondary text-sm py-2 px-5 w-full">Get Started</button></SignUpButton>
           </div>
           <div class="card flex flex-col items-center text-center p-8 ring-2 ring-primary-500 relative">
             <div class="absolute -top-3 left-1/2 -translate-x-1/2"><span class="inline-flex items-center rounded-full bg-primary-600 px-3 py-1 text-xs font-bold text-white">{{ PRICING.yearly.savings }}</span></div>
@@ -97,7 +99,7 @@ const steps = [
             <div class="text-sm font-semibold text-primary-600 mb-1">Annual</div>
             <div class="text-3xl font-bold text-neutral-900 mb-1">{{ PRICING.yearly.price }}</div>
             <div class="text-sm text-neutral-500 mb-6">{{ PRICING.yearly.monthlyEquivalent }}</div>
-            <SignUpButton mode="modal"><button class="btn-primary text-sm py-2 px-5 w-full">Get Started</button></SignUpButton>
+            <NuxtLink v-if="isSignedIn" to="/dashboard" class="btn-primary text-sm py-2 px-5 w-full text-center">Get Started</NuxtLink><SignUpButton v-else mode="modal"><button class="btn-primary text-sm py-2 px-5 w-full">Get Started</button></SignUpButton>
           </div>
         </div>
         <p class="mt-8"><NuxtLink to="/pricing" class="text-sm text-primary-600 hover:text-primary-700 font-medium">See full pricing details →</NuxtLink></p>
@@ -109,11 +111,10 @@ const steps = [
       <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
         <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Ready to enjoy your content in peace?</h2>
         <p class="text-primary-100 mb-8 text-lg">Try CalmEar free for {{ PRICING.trial.durationDays }} days.</p>
-        <SignUpButton mode="modal">
-          <button class="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-primary-700 shadow-md hover:bg-primary-50 transition-colors">
+        <NuxtLink v-if="isSignedIn" to="/dashboard" class="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-primary-700 shadow-md hover:bg-primary-50 transition-colors">Go to Dashboard</NuxtLink>
+        <SignUpButton v-else mode="modal"><button class="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-primary-700 shadow-md hover:bg-primary-50 transition-colors">
             Try free for {{ PRICING.trial.durationDays }} days
-          </button>
-        </SignUpButton>
+          </button></SignUpButton>
       </div>
     </section>
   </div>

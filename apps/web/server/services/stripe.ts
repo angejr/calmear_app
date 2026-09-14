@@ -11,7 +11,7 @@ export function useStripe(): Stripe {
   if (_stripe) return _stripe
 
   const config = useRuntimeConfig()
-  const key = config.stripeSecretKey
+  const key = config.stripeSecretKey?.trim()
 
   if (!key) {
     throw new Error('STRIPE_SECRET_KEY is not set.')

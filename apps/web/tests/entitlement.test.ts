@@ -66,6 +66,19 @@ describe('computeEntitlement', () => {
       expect(result.subscriptionEndsAt).not.toBeNull()
     })
 
+    it('returns premium when subscriptionCurrentPeriodEnd is null (Stripe Basil API)', () => {
+      // Stripe Basil API moved current_period_end to sub.items.data[0].
+      // subscriptionCurrentPeriodEnd may be null in DB — access must still be granted.
+      const user = makeUser({
+        subscriptionStatus: 'active',
+        stripeSubscriptionId: 'sub_test',
+        subscriptionCurrentPeriodEnd: null,
+      })
+      const result = computeEntitlement(user)
+      expect(result.active).toBe(true)
+      expect(result.plan).toBe('premium')
+    })
+
     it('premium takes precedence over trial being active', () => {
       const future = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
       const user = makeUser({
