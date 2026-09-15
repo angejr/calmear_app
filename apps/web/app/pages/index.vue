@@ -5,6 +5,15 @@ useSeoMeta({
   title: 'CalmEar — Enjoy YouTube without distracting mouth sounds',
   description: 'CalmEar detects and reduces mouth smacks in your browser. 30-day free trial.',
 })
+
+// Stable extension connect redirect: if the user lands on /?source=extension,
+// send them straight to the dashboard connect tab. This is the URL the extension
+// popup opens for sign-in / manage-account flows.
+const route = useRoute()
+if (route.query.source === 'extension') {
+  await navigateTo('/dashboard?tab=connect', { replace: true })
+}
+
 const steps = [
   { number: 1, emoji: '🧩', title: 'Install CalmEar', description: 'Add the CalmEar extension to Chrome from the Chrome Web Store.' },
   { number: 2, emoji: '🔐', title: 'Sign in to your account', description: 'Create a free CalmEar account. Your 30-day trial starts automatically.' },
