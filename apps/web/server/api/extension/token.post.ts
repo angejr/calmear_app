@@ -1,16 +1,16 @@
 import { getRequestHeader } from 'h3'
-import { consumePairingCode, createExtensionSession, checkActivateRateLimit } from '../../services/extension-auth'
+import { consumeAuthCode, createExtensionSession, checkTokenRateLimit } from '../../services/extension-auth'
 
 /**
- * POST /api/extension/activate
+ * POST /api/extension/token
  *
- * Activates a Chrome extension by consuming a one-time pairing code.
- * Returns a long-lived bearer token for the extension to store locally.
+ * Exchanges a short-lived, single-use authorization code (issued by the
+ * authenticated web app) for a long-lived CalmEar extension bearer token.
  *
- * This endpoint does NOT require a Clerk session — the extension isn't
- * logged into the website. The pairing code proves web-session authorization.
+ * Authentication: NONE — the authorization code itself is the credential.
+ * The code is single-use, short-lived (2 minutes), and hashed server-side.
  *
- * Request body: { "code": "CALM-XXXX-XXXX" }
+ * Request body: { "code": "..." }
  * Response:     { "token": "...", "expiresAt": "..." }
  */
 export default defineEventHandler(async (event) => {
@@ -20,17 +20,17 @@ export default defineEventHandler(async (event) => {
     getRequestHeader(event, 'x-real-ip') ??
     'unknown'
 
-  checkActivateRateLimit(ip)
+  checkTokenRateLimit(ip)
 
   const body = await readBody(event)
   const rawCode = body?.code as string | undefined
 
   if (!rawCode || typeof rawCode !== 'string' || rawCode.trim().length === 0) {
-    throw createError({ statusCode: 400, statusMessage: 'Pairing code is required.' })
+    throw createError({ statusCode: 400, statusMessage: 'Authorization code is required.' })
   }
 
-  // Validate and consume the pairing code
-  const user = await consumePairingCode(rawCode)
+  // Validate and consume the authorization code
+  const user = await consumeAuthCode(rawCode)
 
   // Create a new long-lived extension session
   const { rawToken, expiresAt } = await createExtensionSession(user.id)

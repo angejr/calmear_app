@@ -2,56 +2,57 @@ import { eq, and, gt, isNull } from 'drizzle-orm'
 import { createError } from 'h3'
 import { useDb } from '../utils/db'
 import { extensionPairingCodes, extensionSessions, users } from '../../drizzle/schema'
-import { sha256, randomHex, generatePairingCode } from '../utils/crypto'
+import { sha256, randomHex } from '../utils/crypto'
 export { extractBearerToken } from '../utils/crypto'
 import type { User } from '../../drizzle/schema'
 
 /** Extension sessions expire after 365 days by default */
 const SESSION_TTL_DAYS = 365
-/** Pairing codes expire after 10 minutes */
-const PAIRING_CODE_TTL_MINUTES = 10
+/** Authorization codes expire after 2 minutes */
+const AUTH_CODE_TTL_MINUTES = 2
 
 // ---------------------------------------------------------------------------
-// Simple in-memory rate limiting for /api/extension/activate
+// Simple in-memory rate limiting for /api/extension/token
 // MVP-grade: resets on server restart, not distributed.
 // TODO: Replace with Redis/Upstash rate limiting for production scaling.
 // ---------------------------------------------------------------------------
-const activateAttempts = new Map<string, { count: number; resetAt: number }>()
+const tokenAttempts = new Map<string, { count: number; resetAt: number }>()
 const RATE_LIMIT_WINDOW_MS = 60_000
 const RATE_LIMIT_MAX = 10
 
-export function checkActivateRateLimit(ip: string): void {
+export function checkTokenRateLimit(ip: string): void {
   const now = Date.now()
-  const entry = activateAttempts.get(ip)
+  const entry = tokenAttempts.get(ip)
   if (!entry || entry.resetAt < now) {
-    activateAttempts.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
+    tokenAttempts.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
     return
   }
   entry.count++
   if (entry.count > RATE_LIMIT_MAX) {
-    throw createError({ statusCode: 429, statusMessage: 'Too many activation attempts. Please wait a minute.' })
+    throw createError({ statusCode: 429, statusMessage: 'Too many token exchange attempts. Please wait a minute.' })
   }
 }
 
 // ---------------------------------------------------------------------------
-// Pairing codes
+// Authorization codes (short-lived, single-use grants issued to the browser
+// by the authenticated web app and exchanged by the extension for a token)
 // ---------------------------------------------------------------------------
 
-export async function createPairingCode(userId: string): Promise<{ rawCode: string; expiresAt: Date }> {
+export async function createAuthCode(userId: string): Promise<{ rawCode: string; expiresAt: Date }> {
   const db = useDb()
-  const rawCode = generatePairingCode()
+  const rawCode = randomHex(32)
   const codeHash = sha256(rawCode)
-  const expiresAt = new Date(Date.now() + PAIRING_CODE_TTL_MINUTES * 60 * 1000)
+  const expiresAt = new Date(Date.now() + AUTH_CODE_TTL_MINUTES * 60 * 1000)
   await db.insert(extensionPairingCodes).values({ userId, codeHash, expiresAt })
   return { rawCode, expiresAt }
 }
 
-export async function consumePairingCode(rawCode: string): Promise<User> {
+export async function consumeAuthCode(rawCode: string): Promise<User> {
   const db = useDb()
-  const codeHash = sha256(rawCode.trim().toUpperCase())
+  const codeHash = sha256(rawCode.trim())
   const now = new Date()
 
-  const [pairingCode] = await db
+  const [authCode] = await db
     .select()
     .from(extensionPairingCodes)
     .where(and(
@@ -61,15 +62,15 @@ export async function consumePairingCode(rawCode: string): Promise<User> {
     ))
     .limit(1)
 
-  if (!pairingCode) {
-    throw createError({ statusCode: 400, statusMessage: 'Invalid, expired, or already-used pairing code.' })
+  if (!authCode) {
+    throw createError({ statusCode: 400, statusMessage: 'Invalid, expired, or already-used authorization code.' })
   }
 
   await db.update(extensionPairingCodes)
     .set({ consumedAt: now })
-    .where(eq(extensionPairingCodes.id, pairingCode.id))
+    .where(eq(extensionPairingCodes.id, authCode.id))
 
-  const [user] = await db.select().from(users).where(eq(users.id, pairingCode.userId)).limit(1)
+  const [user] = await db.select().from(users).where(eq(users.id, authCode.userId)).limit(1)
   if (!user) throw createError({ statusCode: 500, statusMessage: 'User not found.' })
   return user
 }
@@ -124,5 +125,3 @@ export async function revokeExtensionToken(rawToken: string): Promise<void> {
     .set({ revokedAt: new Date() })
     .where(eq(extensionSessions.tokenHash, tokenHash))
 }
-
-

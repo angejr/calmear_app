@@ -13,34 +13,6 @@ interface UserData { id: string; email: string | null; subscriptionStatus: strin
 const { data, pending, error, refresh } = await useFetch<{ user: UserData; entitlement: Entitlement }>('/api/user/me')
 console.log(data)
 
-const pairingCodeVal = ref<string | null>(null)
-const pairingExpiry = ref<string | null>(null)
-const pairingLoading = ref(false)
-const pairingError = ref<string | null>(null)
-const pairingCopied = ref(false)
-
-async function generatePairingCode() {
-  pairingLoading.value = true
-  pairingError.value = null
-  pairingCodeVal.value = null
-  try {
-    const res = await $fetch<{ code: string; expiresAt: string }>('/api/extension/pairing-code', { method: 'POST' })
-    pairingCodeVal.value = res.code
-    pairingExpiry.value = res.expiresAt
-  }
-  catch (e: unknown) {
-    pairingError.value = (e as { data?: { statusMessage?: string } })?.data?.statusMessage ?? 'Failed to generate code.'
-  }
-  finally { pairingLoading.value = false }
-}
-
-async function copyCode() {
-  if (!pairingCodeVal.value) return
-  await navigator.clipboard.writeText(pairingCodeVal.value)
-  pairingCopied.value = true
-  setTimeout(() => { pairingCopied.value = false }, 2000)
-}
-
 const billingLoading = ref<string | null>(null)
 const billingError = ref<string | null>(null)
 
@@ -192,22 +164,6 @@ function daysRemaining(iso?: string | null): number {
             <button class="btn-primary" :disabled="!!billingLoading" @click="subscribe('yearly')">{{ billingLoading === 'yearly' ? 'Loading…' : 'Subscribe Annual (€39.99/yr)' }}</button>
             <button class="btn-secondary" :disabled="!!billingLoading" @click="subscribe('monthly')">{{ billingLoading === 'monthly' ? 'Loading…' : 'Subscribe Monthly (€4.99/mo)' }}</button>
           </div>
-        </div>
-
-        <div class="card p-8 mb-6">
-          <h2 class="text-lg font-semibold text-neutral-900 mb-1">Connect Chrome Extension</h2>
-          <p class="text-sm text-neutral-600 mb-5">Generate a one-time code and enter it in the extension popup. Expires in 10 minutes.</p>
-          <div v-if="pairingCodeVal" class="mb-5">
-            <div class="flex items-center gap-3 bg-neutral-50 border border-neutral-200 rounded-xl p-4">
-              <code class="flex-1 text-2xl font-mono font-bold tracking-widest text-primary-700">{{ pairingCodeVal }}</code>
-              <button class="btn-secondary text-xs py-1.5 px-3 shrink-0" @click="copyCode">{{ pairingCopied ? '✓ Copied' : 'Copy' }}</button>
-            </div>
-            <p class="text-xs text-neutral-500 mt-2">Expires: {{ formatDate(pairingExpiry) }} — single use only</p>
-          </div>
-          <div v-if="pairingError" class="mb-4 text-sm text-red-600 bg-red-50 rounded-lg p-3">{{ pairingError }}</div>
-          <button class="btn-outline" :disabled="pairingLoading" @click="generatePairingCode">
-            {{ pairingLoading ? 'Generating…' : pairingCodeVal ? 'Generate New Code' : 'Connect Chrome Extension' }}
-          </button>
         </div>
 
         <div class="card p-6 text-sm text-neutral-600 space-y-2">
