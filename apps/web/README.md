@@ -41,7 +41,7 @@ App runs at `http://localhost:3000`.
 
 1. Create project at [supabase.com](https://supabase.com)
 2. Go to Settings → Database → Connection string → **Transaction** mode (port 6543)
-3. Copy to `.env`: `DATABASE_URL`
+3. Copy to `.env`: `NUXT_DATABASE_URL`
 4. Run: `npm run db:migrate`
 
 ### Stripe
@@ -49,9 +49,9 @@ App runs at `http://localhost:3000`.
 1. Create product `CalmEar Premium` with two recurring prices:
    - Monthly: €4.99/month
    - Annual: €39.99/year
-2. Copy to `.env`: `STRIPE_SECRET_KEY`, `STRIPE_MONTHLY_PRICE_ID`, `STRIPE_YEARLY_PRICE_ID`
+2. Copy to `.env`: `NUXT_STRIPE_SECRET_KEY`, `NUXT_STRIPE_MONTHLY_PRICE_ID`, `NUXT_STRIPE_YEARLY_PRICE_ID`
 3. Activate Customer Portal (Stripe Dashboard → Billing → Customer Portal)
-4. Set up webhooks (see below): `STRIPE_WEBHOOK_SECRET`
+4. Set up webhooks (see below): `NUXT_STRIPE_WEBHOOK_SECRET`
 
 ---
 
@@ -59,7 +59,7 @@ App runs at `http://localhost:3000`.
 
 ```bash
 stripe listen --forward-to localhost:3000/api/webhooks/stripe
-# Copy the printed whsec_... to STRIPE_WEBHOOK_SECRET in .env
+# Copy the printed whsec_... to NUXT_STRIPE_WEBHOOK_SECRET in .env
 ```
 
 Production webhook events to enable:

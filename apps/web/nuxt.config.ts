@@ -12,12 +12,15 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
-    // Server-only secrets — never exposed to browser
-    stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
-    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
-    stripeMonthlyPriceId: process.env.STRIPE_MONTHLY_PRICE_ID || '',
-    stripeYearlyPriceId: process.env.STRIPE_YEARLY_PRICE_ID || '',
-    databaseUrl: process.env.DATABASE_URL || '',
+    // Server-only secrets — never exposed to browser.
+    // Each key is overridable at runtime via its NUXT_ environment variable
+    // (e.g. stripeSecretKey <- NUXT_STRIPE_SECRET_KEY) — same names in dev (.env)
+    // and production (Fly.io secrets).
+    stripeSecretKey: process.env.NUXT_STRIPE_SECRET_KEY || '',
+    stripeWebhookSecret: process.env.NUXT_STRIPE_WEBHOOK_SECRET || '',
+    stripeMonthlyPriceId: process.env.NUXT_STRIPE_MONTHLY_PRICE_ID || '',
+    stripeYearlyPriceId: process.env.NUXT_STRIPE_YEARLY_PRICE_ID || '',
+    databaseUrl: process.env.NUXT_DATABASE_URL || '',
     // Public — safe for browser
     public: {
       appUrl: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000',

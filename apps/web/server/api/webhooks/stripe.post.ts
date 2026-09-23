@@ -8,7 +8,7 @@ import type { User } from '../../../drizzle/schema'
  * POST /api/webhooks/stripe
  *
  * Receives and processes Stripe webhook events.
- * Signature is verified using STRIPE_WEBHOOK_SECRET.
+ * Signature is verified using NUXT_STRIPE_WEBHOOK_SECRET.
  *
  * Design notes:
  *  - checkout.session.completed is the PRIMARY handler for new subscriptions.

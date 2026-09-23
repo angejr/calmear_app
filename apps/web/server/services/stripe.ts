@@ -5,7 +5,7 @@ let _stripe: Stripe | null = null
 
 /**
  * Returns a singleton Stripe SDK instance.
- * STRIPE_SECRET_KEY is a server-only runtime config value — never exposed client-side.
+ * NUXT_STRIPE_SECRET_KEY is a server-only runtime config value — never exposed client-side.
  */
 export function useStripe(): Stripe {
   if (_stripe) return _stripe
@@ -14,7 +14,7 @@ export function useStripe(): Stripe {
   const key = config.stripeSecretKey?.trim()
 
   if (!key) {
-    throw new Error('STRIPE_SECRET_KEY is not set.')
+    throw new Error('NUXT_STRIPE_SECRET_KEY is not set.')
   }
 
   _stripe = new Stripe(key, {

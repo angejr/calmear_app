@@ -18,7 +18,7 @@ export function useDb() {
 
   if (!url) {
     throw new Error(
-      'DATABASE_URL is not set. Add it to your .env file.',
+      'NUXT_DATABASE_URL is not set. Add it to your .env file (dev) or Fly.io secrets (production).',
     )
   }
 

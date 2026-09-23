@@ -4,10 +4,9 @@ Production target: **https://calmear-app.com**
 
 Pipeline: GitHub → Docker image (built by Fly from `Dockerfile`) → Fly.io → `calmear-app.com`.
 
-> **Important naming note:** `nuxt.config.ts` reads plain env vars
-> (`STRIPE_SECRET_KEY`, `DATABASE_URL`, …) only at **build/dev** time.
-> At **production runtime**, Nuxt picks up `NUXT_`-prefixed overrides for its
-> runtime config. That is why every Fly secret below uses the `NUXT_` prefix.
+> **Naming:** every environment variable uses its `NUXT_` name — the exact same
+> names in local development (`.env`) and in production (Fly secrets). These are
+> the names Nuxt's runtime config resolves at runtime, so no mapping is needed.
 
 ---
 
@@ -32,9 +31,8 @@ No build arguments or secrets are required — the image contains no credentials
 docker run --rm -p 8080:8080 --env-file .env calmear-web
 ```
 
-> For a fully functional local run, rename the plain keys in a **temporary copy**
-> of `.env` to their `NUXT_`-prefixed names (`STRIPE_SECRET_KEY` →
-> `NUXT_STRIPE_SECRET_KEY`, etc.) — that is what production uses.
+This works directly with your dev `.env` — the variable names are identical in
+development and production.
 
 Verify:
 
@@ -150,7 +148,7 @@ production DB:
 
 ```bash
 cd apps/web
-DATABASE_URL="<production pooler URL>" npm run db:migrate
+NUXT_DATABASE_URL="<production pooler URL>" npm run db:migrate
 ```
 
 ## 11. Logs & status
