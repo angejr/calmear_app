@@ -148,6 +148,14 @@ apps/web/
 
 ---
 
+## Deployment (Fly.io)
+
+See [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) for the full production
+deployment guide: Docker image, Fly.io setup, secrets, DNS for
+`calmear-app.com`, Clerk production, and Stripe live webhooks.
+
+---
+
 ## Extension Integration
 
 See [`docs/EXTENSION_INTEGRATION.md`](./docs/EXTENSION_INTEGRATION.md).

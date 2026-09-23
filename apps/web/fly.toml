@@ -1,0 +1,41 @@
+# Fly.io configuration for the CalmEar web application.
+# Deploy from this directory (apps/web): fly deploy
+
+app = "calmear-app"
+
+# Frankfurt — closest to the Supabase eu-central-1 database and the
+# primary (EU) user base. Change here if your users are elsewhere.
+primary_region = "fra"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8080"
+  HOST = "0.0.0.0"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Keep the machine always running — auto-stop would add multi-second
+  # cold-start latency to the first auth/billing request after idle.
+  auto_stop_machines = "off"
+  auto_start_machines = "off"
+  min_machines_running = 1
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 200
+    hard_limit = 250
+
+  [[http_service.checks]]
+    interval = "10s"
+    timeout = "2s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/api/health"
+
+# Small initial resources — plenty for this SSR app; do not over-provision.
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
