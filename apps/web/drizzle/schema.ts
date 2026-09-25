@@ -4,6 +4,7 @@ import {
   text,
   timestamp,
   pgEnum,
+  uniqueIndex,
 } from 'drizzle-orm/pg-core'
 
 // ---------------------------------------------------------------------------
@@ -20,6 +21,16 @@ export const subscriptionStatusEnum = pgEnum('subscription_status', [
   'incomplete',
 ])
 
+/**
+ * Which environment created the user:
+ *  - 'production'  — Clerk live instance (pk_live_ keys)
+ *  - 'development' — Clerk dev instance (pk_test_ keys)
+ */
+export const appVersionEnum = pgEnum('app_version', [
+  'production',
+  'development',
+])
+
 // ---------------------------------------------------------------------------
 // users
 // Stores CalmEar application state per authenticated Clerk user.
@@ -34,6 +45,13 @@ export const users = pgTable('users', {
 
   /** Copied from Clerk for convenience; not authoritative for auth */
   email: text('email'),
+
+  /**
+   * Which environment created this user (set once on creation from the
+   * configured Clerk publishable key). The 'production' default also
+   * backfills existing rows when the migration is applied.
+   */
+  version: appVersionEnum('version').notNull().default('production'),
 
   // Trial state — set once on first record creation; never reset
   trialStartedAt: timestamp('trial_started_at', { withTimezone: true }),
@@ -55,7 +73,14 @@ export const users = pgTable('users', {
   updatedAt: timestamp('updated_at', { withTimezone: true })
     .notNull()
     .defaultNow(),
-})
+}, (table) => [
+  /**
+   * One user per email per environment: a development and a production
+   * user may share an email, but two users in the SAME version cannot.
+   * Postgres treats NULLs as distinct, so users without an email are exempt.
+   */
+  uniqueIndex('users_version_email_unique').on(table.version, table.email),
+])
 
 // ---------------------------------------------------------------------------
 // extension_pairing_codes

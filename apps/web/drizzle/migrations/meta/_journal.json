@@ -8,6 +8,13 @@
       "when": 1789211560209,
       "tag": "0000_flowery_talisman",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790348458825,
+      "tag": "0001_hesitant_ender_wiggin",
+      "breakpoints": true
     }
   ]
 }

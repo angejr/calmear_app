@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm'
 import { createError } from 'h3'
 import { useDb } from '../utils/db'
+import { getAppVersion } from '../utils/version'
 import { users } from '../../drizzle/schema'
 import type { User } from '../../drizzle/schema'
 
@@ -11,15 +12,22 @@ const TRIAL_DURATION_DAYS = 30
  * Clerk user. If one already exists it is returned unchanged.
  *
  * On first creation:
+ *   - version = current environment ('production' or 'development',
+ *     derived from the configured Clerk publishable key)
  *   - trial_started_at = NOW()
  *   - trial_ends_at = NOW() + 30 days
  *
  * The trial clock starts on the date the CalmEar account is created.
  * It is NOT reset by logout, reinstall, or cache clears.
  * The database is authoritative.
+ *
+ * The (version, email) unique index guarantees one account per email per
+ * environment: if a DIFFERENT Clerk account already owns this email in this
+ * version, a 409 is thrown instead of silently creating a duplicate row.
  */
 export async function ensureUser(clerkUserId: string, email?: string | null): Promise<User> {
   const db = useDb()
+  const version = getAppVersion()
 
   // Try to find existing user first
   const existing = await db
@@ -41,6 +49,7 @@ export async function ensureUser(clerkUserId: string, email?: string | null): Pr
     .values({
       clerkUserId,
       email: email ?? null,
+      version,
       trialStartedAt: now,
       trialEndsAt,
       subscriptionStatus: 'none',
@@ -55,7 +64,16 @@ export async function ensureUser(clerkUserId: string, email?: string | null): Pr
       .from(users)
       .where(eq(users.clerkUserId, clerkUserId))
       .limit(1)
-    return raceWinner!
+
+    if (raceWinner) return raceWinner
+
+    // Not a race on clerk_user_id — the (version, email) unique index
+    // rejected the insert: another Clerk account already owns this email
+    // in this environment.
+    throw createError({
+      statusCode: 409,
+      statusMessage: 'An account with this email already exists in this environment.',
+    })
   }
 
   return created

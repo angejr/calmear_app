@@ -32,6 +32,7 @@ export default defineEventHandler(async (event) => {
     user: {
       id: user.id,
       email: user.email,
+      version: user.version,
       trialStartedAt: user.trialStartedAt?.toISOString() ?? null,
       trialEndsAt: user.trialEndsAt?.toISOString() ?? null,
       stripeCustomerId: user.stripeCustomerId ?? null,
