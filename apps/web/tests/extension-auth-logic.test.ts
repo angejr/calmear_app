@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { extractBearerToken, sha256, generatePairingCode } from '../server/utils/crypto'
+import { extractBearerToken, sha256, randomHex } from '../server/utils/crypto'
 
 /**
  * Unit tests for extension authentication logic that can run without a database.
@@ -30,22 +30,23 @@ describe('extractBearerToken', () => {
   })
 })
 
-describe('pairing code format and hashing', () => {
-  it('pairing codes have correct format', () => {
-    for (let i = 0; i < 10; i++) {
-      const code = generatePairingCode()
-      expect(code).toMatch(/^CALM-[A-Z2-9]{4}-[A-Z2-9]{4}$/)
-    }
+describe('authorization code hashing', () => {
+  it('auth codes are cryptographically random hex (used by createAuthCode)', () => {
+    // The current extension flow issues opaque randomHex(32) codes
+    const code = randomHex(32)
+    expect(code).toHaveLength(64)
+    expect(code).toMatch(/^[0-9a-f]+$/)
+    expect(randomHex(32)).not.toBe(randomHex(32))
   })
 
   it('same raw code always hashes to same value', () => {
-    const code = 'CALM-TEST-CODE'
+    const code = randomHex(32)
     expect(sha256(code)).toBe(sha256(code))
   })
 
   it('different codes produce different hashes', () => {
-    const a = 'CALM-AAAA-BBBB'
-    const b = 'CALM-CCCC-DDDD'
+    const a = randomHex(32)
+    const b = randomHex(32)
     expect(sha256(a)).not.toBe(sha256(b))
   })
 })

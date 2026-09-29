@@ -138,6 +138,7 @@ async function handleSignOut() {
           <div class="flex gap-4 text-xs text-neutral-500">
             <NuxtLink to="/pricing" class="hover:text-neutral-700">Pricing</NuxtLink>
             <NuxtLink to="/download" class="hover:text-neutral-700">Download</NuxtLink>
+            <NuxtLink to="/privacy" class="hover:text-neutral-700">Privacy</NuxtLink>
           </div>
         </div>
       </div>

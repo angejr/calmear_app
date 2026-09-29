@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { sha256, randomHex, generatePairingCode, safeCompare } from '../server/utils/crypto'
+import { sha256, randomHex, safeCompare } from '../server/utils/crypto'
 
 describe('sha256', () => {
   it('returns a 64-character hex string', () => {
@@ -31,16 +31,12 @@ describe('randomHex', () => {
   it('respects custom byte length', () => {
     expect(randomHex(48)).toHaveLength(96)
   })
-})
 
-describe('generatePairingCode', () => {
-  it('matches the CALM-XXXX-XXXX format', () => {
-    const code = generatePairingCode()
-    expect(code).toMatch(/^CALM-[A-Z2-9]{4}-[A-Z2-9]{4}$/)
-  })
-
-  it('generates different codes each call', () => {
-    expect(generatePairingCode()).not.toBe(generatePairingCode())
+  it('is suitable as an authorization code (32 bytes, cryptographically random)', () => {
+    // createAuthCode() in extension-auth.ts uses randomHex(32) as the raw code
+    const code = randomHex(32)
+    expect(code).toHaveLength(64)
+    expect(code).toMatch(/^[0-9a-f]+$/)
   })
 })
 
