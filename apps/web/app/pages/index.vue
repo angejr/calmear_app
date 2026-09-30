@@ -18,6 +18,11 @@ const steps = [
     <!-- Hero -->
     <section class="bg-gradient-to-b from-primary-50 to-white pt-16 pb-24 sm:pt-24 sm:pb-32">
       <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+        <img
+          src="/icon.png"
+          alt="CalmEar logo"
+          class="mx-auto h-24 w-24 object-contain mb-8 drop-shadow-md"
+        />
         <div class="inline-flex items-center gap-2 rounded-full bg-primary-100 px-4 py-1.5 text-xs font-semibold text-primary-700 mb-8">
           <span class="h-1.5 w-1.5 rounded-full bg-primary-500" />
           {{ PRICING.trial.durationDays }}-day free trial · No credit card required

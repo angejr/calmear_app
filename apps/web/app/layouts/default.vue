@@ -20,7 +20,7 @@ async function handleSignOut() {
         <div class="flex h-16 items-center justify-between">
           <!-- Logo -->
           <NuxtLink to="/" class="flex items-center gap-2 group">
-            <span class="text-2xl" aria-hidden="true">🎧</span>
+            <img src="/icon.png" alt="CalmEar logo" class="h-8 w-8 object-contain" />
             <span class="text-lg font-semibold text-neutral-900 group-hover:text-primary-600 transition-colors">
               CalmEar
             </span>
@@ -129,7 +129,7 @@ async function handleSignOut() {
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div class="flex items-center gap-2">
-            <span class="text-lg" aria-hidden="true">🎧</span>
+            <img src="/icon.png" alt="CalmEar logo" class="h-6 w-6 object-contain" />
             <span class="text-sm font-medium text-neutral-700">CalmEar</span>
           </div>
           <p class="text-xs text-neutral-500">
