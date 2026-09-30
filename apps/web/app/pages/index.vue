@@ -19,7 +19,7 @@ const steps = [
     <section class="bg-gradient-to-b from-primary-50 to-white pt-16 pb-24 sm:pt-24 sm:pb-32">
       <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
         <img
-          src="/icon.png"
+          src="/icon-transparent.png"
           alt="CalmEar logo"
           class="mx-auto h-24 w-24 object-contain mb-8 drop-shadow-md"
         />
@@ -31,7 +31,7 @@ const steps = [
           Enjoy YouTube without<br /><span class="text-primary-600">distracting mouth sounds.</span>
         </h1>
         <p class="mt-6 text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-          CalmEar detects and reduces mouth smacks directly in your browser — so you can focus on what you want to watch.
+          CalmEar detects and reduces mouth smacks directly in your browser so you can focus on what you want to watch.
         </p>
         <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
           <NuxtLink v-if="isSignedIn" to="/dashboard" class="btn-primary text-base px-8 py-4">Go to Dashboard</NuxtLink>
