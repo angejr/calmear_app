@@ -46,7 +46,7 @@ const steps = [
     <section id="how-it-works" class="py-20 sm:py-28">
       <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-14">
-          <h2 class="text-3xl sm:text-4xl font-bold text-neutral-900">How it works</h2>
+          <h2 class="text-3xl sm:text-4xl font-bold text-neutral-900">Get Started</h2>
           <p class="mt-3 text-neutral-600">Get started in three simple steps.</p>
         </div>
         <div class="grid sm:grid-cols-3 gap-8">
@@ -59,6 +59,9 @@ const steps = [
         </div>
       </div>
     </section>
+
+    <!-- Interactive demo -->
+    <DemoSeeHowItWorks />
 
     <!-- Privacy -->
     <section class="bg-neutral-50 py-20 sm:py-28">

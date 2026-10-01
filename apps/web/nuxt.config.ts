@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { fileURLToPath } from 'node:url'
+import { DEMO_MODEL_DEV_ROUTE, demoModelDevHandler } from './scripts/demo-model-dev-handler'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-01-01',
   future: {
@@ -32,7 +35,25 @@ export default defineNuxtConfig({
     // Public — safe for browser
     public: {
       appUrl: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000',
+      // CalmEar model used by the landing-page demo (the extension's model.onnx).
+      // Production: an external URL (bucket/CDN with CORS). Dev default: served
+      // from the calmear_extension checkout by scripts/demo-model-dev-handler.ts.
+      demoModelUrl: process.env.NUXT_PUBLIC_DEMO_MODEL_URL || DEMO_MODEL_DEV_ROUTE,
     },
+  },
+  devServerHandlers: [
+    { route: DEMO_MODEL_DEV_ROUTE, handler: demoModelDevHandler(fileURLToPath(new URL('.', import.meta.url))) },
+  ],
+  vite: {
+    resolve: {
+      // The landing-page demo worker uses the same onnxruntime-web build as the
+      // extension (lib/ort.min.js, here as ES module), which loads its WASM from
+      // ort.env.wasm.wasmPaths (/demo/ort/) instead of bundling it.
+      alias: [{ find: /^onnxruntime-web$/, replacement: fileURLToPath(new URL('./node_modules/onnxruntime-web/dist/ort.min.mjs', import.meta.url)) }],
+    },
+    // Dev only: pre-bundle it at startup instead of when the demo worker first
+    // imports it (which makes Vite reload the page mid-demo).
+    optimizeDeps: { include: ['onnxruntime-web'] },
   },
   typescript: {
     strict: true,

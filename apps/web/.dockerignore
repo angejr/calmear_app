@@ -20,3 +20,6 @@ drizzle/migrations
 README.md
 *.md
 .vscode
+
+# Source recordings for the landing-page demo examples (outputs live in public/demo/examples)
+demo-examples
