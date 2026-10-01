@@ -1,3 +1,38 @@
 {
-  "examples": []
+  "examples": [
+    {
+      "id": "smacking",
+      "title": "Smacking",
+      "description": "Someone making smacking noises while talking",
+      "original": "/demo/examples/smacking/original.m4a",
+      "processed": "/demo/examples/smacking/processed.m4a",
+      "events": [
+        {
+          "startPts_s": 1.2,
+          "endPts_s": 1.4,
+          "confidence": 0.9977
+        },
+        {
+          "startPts_s": 6.9,
+          "endPts_s": 7.1,
+          "confidence": 0.9936
+        },
+        {
+          "startPts_s": 7.7,
+          "endPts_s": 8,
+          "confidence": 0.9636
+        },
+        {
+          "startPts_s": 10.5,
+          "endPts_s": 10.7,
+          "confidence": 0.9506
+        },
+        {
+          "startPts_s": 11.6,
+          "endPts_s": 11.8,
+          "confidence": 0.9638
+        }
+      ]
+    }
+  ]
 }
