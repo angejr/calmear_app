@@ -2,7 +2,7 @@
 import { PRICING } from '../../config/pricing'
 const { isSignedIn } = useUser()
 useSeoMeta({
-  title: 'CalmEar — Enjoy YouTube without distracting mouth sounds',
+  title: 'CalmEar - Enjoy YouTube without distracting mouth sounds',
   description: 'CalmEar detects and reduces mouth smacks in your browser. 30-day free trial.',
 })
 
