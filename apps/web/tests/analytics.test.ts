@@ -20,6 +20,52 @@ async function loadModule() {
 
 const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000).toISOString()
 
+describe('purchase tracking', () => {
+  beforeEach(() => vi.unstubAllGlobals())
+  afterEach(() => vi.unstubAllGlobals())
+
+  function stubSession() {
+    const win: { dataLayer?: Record<string, unknown>[] } = {}
+    const session = new Map<string, string>()
+    vi.stubGlobal('window', win)
+    vi.stubGlobal('sessionStorage', {
+      getItem: (k: string) => session.get(k) ?? null,
+      setItem: (k: string, v: string) => { session.set(k, v) },
+      removeItem: (k: string) => { session.delete(k) },
+    })
+    return { win, session }
+  }
+
+  it('pushes one purchase in the ecommerce format after a successful checkout', async () => {
+    const { win } = stubSession()
+    const { rememberCheckoutPlan, trackPurchaseOnce } = await loadModule()
+    rememberCheckoutPlan('yearly')
+    trackPurchaseOnce()
+    trackPurchaseOnce() // reload of the success page
+    expect(win.dataLayer).toEqual([
+      { ecommerce: null },
+      {
+        event: 'purchase',
+        ecommerce: {
+          value: 39.99,
+          currency: 'EUR',
+          items: [{ item_id: 'calmear-premium-yearly', item_name: 'CalmEar Premium (Annual)', item_category: 'Subscription', price: 39.99, quantity: 1 }],
+        },
+      },
+    ])
+  })
+
+  it('uses the monthly price and pushes nothing without a pending checkout', async () => {
+    const { win } = stubSession()
+    const { rememberCheckoutPlan, trackPurchaseOnce } = await loadModule()
+    trackPurchaseOnce()
+    expect(win.dataLayer).toBeUndefined()
+    rememberCheckoutPlan('monthly')
+    trackPurchaseOnce()
+    expect((win.dataLayer![1]!.ecommerce as { value: number }).value).toBe(4.99)
+  })
+})
+
 describe('trackSignUpOnce', () => {
   beforeEach(() => vi.unstubAllGlobals())
   afterEach(() => vi.unstubAllGlobals())

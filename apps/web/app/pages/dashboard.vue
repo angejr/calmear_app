@@ -21,6 +21,7 @@ async function subscribe(plan: 'monthly' | 'yearly') {
   billingError.value = null
   try {
     const res = await $fetch<{ url: string }>('/api/billing/checkout', { method: 'POST', body: { plan } })
+    rememberCheckoutPlan(plan)
     window.location.href = res.url
   }
   catch (e: unknown) {
@@ -54,6 +55,7 @@ const MAX_POLL = 15
 onMounted(() => {
   // Conversion tracking (GTM): counts a new account once.
   if (data.value?.user) trackSignUpOnce(data.value.user)
+  if (checkoutSuccess.value) trackPurchaseOnce()
 
   if (checkoutSuccess.value) {
     pollTimer.value = setInterval(async () => {

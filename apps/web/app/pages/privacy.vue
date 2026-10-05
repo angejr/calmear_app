@@ -108,8 +108,9 @@ const contactEmail = 'ericmrleliko@gmail.com'
             When you visit calmear-app.com, our advertising measurement tags (loaded through Google
             Tag Manager) send information about your visit to Reddit: for example the pages you view
             on our website, technical details such as your browser, device and IP address, a cookie
-            identifier, and whether you created an account. Reddit uses this to tell us whether
-            visitors coming from our Reddit ads sign up. We do not send your email address or your
+            identifier, whether you created an account, and whether you subscribed (the plan and its
+            price). Reddit uses this to tell us whether visitors coming from our Reddit ads sign up
+            or subscribe. We do not send your email address or your
             CalmEar account details to Reddit.
           </p>
           <p class="text-neutral-700 leading-relaxed">
@@ -152,7 +153,7 @@ const contactEmail = 'ericmrleliko@gmail.com'
                 <tr><td class="px-4 py-3 text-neutral-700 font-medium">Stripe</td><td class="px-4 py-3 text-neutral-700">Payment processing</td><td class="px-4 py-3 text-neutral-700">Your payment details and billing information (entered directly with Stripe)</td></tr>
                 <tr><td class="px-4 py-3 text-neutral-700 font-medium">Supabase</td><td class="px-4 py-3 text-neutral-700">Database hosting (EU region)</td><td class="px-4 py-3 text-neutral-700">The account records described in Section 4</td></tr>
                 <tr><td class="px-4 py-3 text-neutral-700 font-medium">Google (Tag Manager)</td><td class="px-4 py-3 text-neutral-700">Loads our advertising measurement tags on the website</td><td class="px-4 py-3 text-neutral-700">Technical data needed to load the tags, such as your IP address and browser details</td></tr>
-                <tr><td class="px-4 py-3 text-neutral-700 font-medium">Reddit</td><td class="px-4 py-3 text-neutral-700">Advertising measurement (Reddit Pixel) on the website</td><td class="px-4 py-3 text-neutral-700">Information about your visit to calmear-app.com and whether you signed up, as described in Section 4</td></tr>
+                <tr><td class="px-4 py-3 text-neutral-700 font-medium">Reddit</td><td class="px-4 py-3 text-neutral-700">Advertising measurement (Reddit Pixel) on the website</td><td class="px-4 py-3 text-neutral-700">Information about your visit to calmear-app.com and whether you signed up or subscribed, as described in Section 4</td></tr>
               </tbody>
             </table>
           </div>
@@ -174,7 +175,7 @@ const contactEmail = 'ericmrleliko@gmail.com'
             <li class="flex gap-2 text-neutral-700"><span class="text-primary-600 shrink-0">•</span><span>Provide the CalmEar service — verify that your account has access to the extension's filtering features.</span></li>
             <li class="flex gap-2 text-neutral-700"><span class="text-primary-600 shrink-0">•</span><span>Manage your free trial and subscription.</span></li>
             <li class="flex gap-2 text-neutral-700"><span class="text-primary-600 shrink-0">•</span><span>Let you sign in securely and connect the extension to your account.</span></li>
-            <li class="flex gap-2 text-neutral-700"><span class="text-primary-600 shrink-0">•</span><span>Measure whether our advertising leads to sign-ups (website only, see Section 4).</span></li>
+            <li class="flex gap-2 text-neutral-700"><span class="text-primary-600 shrink-0">•</span><span>Measure whether our advertising leads to sign-ups and subscriptions (website only, see Section 4).</span></li>
             <li class="flex gap-2 text-neutral-700"><span class="text-primary-600 shrink-0">•</span><span>Respond to support requests you send us.</span></li>
             <li class="flex gap-2 text-neutral-700"><span class="text-primary-600 shrink-0">•</span><span>Meet legal obligations (for example, accounting records for payments).</span></li>
           </ul>
