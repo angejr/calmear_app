@@ -8,7 +8,7 @@ interface Entitlement {
   trialEndsAt: string | null
   subscriptionEndsAt: string | null
 }
-interface UserData { id: string; email: string | null; subscriptionStatus: string }
+interface UserData { id: string; email: string | null; subscriptionStatus: string; createdAt: string }
 
 const { data, pending, error, refresh } = await useFetch<{ user: UserData; entitlement: Entitlement }>('/api/user/me')
 console.log(data)
@@ -52,6 +52,9 @@ const pollAttempts = ref(0)
 const MAX_POLL = 15
 
 onMounted(() => {
+  // Conversion tracking (GTM): counts a new account once.
+  if (data.value?.user) trackSignUpOnce(data.value.user)
+
   if (checkoutSuccess.value) {
     pollTimer.value = setInterval(async () => {
       pollAttempts.value++

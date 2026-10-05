@@ -25,6 +25,8 @@ export const DECODE_SAMPLE_RATE = 48000
 export const ERSM_FFT_SIZE = 256
 export const ERSM_HOP_SIZE = 64
 export const ERSM_THRESHOLD = 1.5
+// Deliberate difference from the extension (-50 dB): the demo attenuates masked
+// bins more strongly. Everything else matches the extension.
 export const ERSM_ATT_DB = -60
 export const ERSM_CONTEXT_MS = 100
 export const ERSM_REGION_PAD_MS = 20

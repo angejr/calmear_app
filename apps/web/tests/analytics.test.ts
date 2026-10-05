@@ -1,0 +1,68 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+type Store = Record<string, string>
+
+function stubBrowser() {
+  const store: Store = {}
+  const win: { dataLayer?: Record<string, unknown>[] } = {}
+  vi.stubGlobal('window', win)
+  vi.stubGlobal('localStorage', {
+    getItem: (k: string) => (k in store ? store[k] : null),
+    setItem: (k: string, v: string) => { store[k] = v },
+  })
+  return { win, store }
+}
+
+async function loadModule() {
+  vi.resetModules()
+  return await import('../app/utils/analytics')
+}
+
+const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000).toISOString()
+
+describe('trackSignUpOnce', () => {
+  beforeEach(() => vi.unstubAllGlobals())
+  afterEach(() => vi.unstubAllGlobals())
+
+  it('pushes sign_up for an account created moments ago', async () => {
+    const { win } = stubBrowser()
+    const { trackSignUpOnce } = await loadModule()
+    trackSignUpOnce({ id: 'u1', createdAt: minutesAgo(1) })
+    expect(win.dataLayer).toEqual([{ event: 'sign_up', method: 'clerk' }])
+  })
+
+  it('does not count the same account twice (reload, later visit)', async () => {
+    const { win, store } = stubBrowser()
+    let mod = await loadModule()
+    mod.trackSignUpOnce({ id: 'u1', createdAt: minutesAgo(1) })
+    mod.trackSignUpOnce({ id: 'u1', createdAt: minutesAgo(1) })
+    expect(win.dataLayer).toHaveLength(1)
+
+    // Fresh page load: in-memory state is gone, the localStorage flag remains.
+    mod = await loadModule()
+    mod.trackSignUpOnce({ id: 'u1', createdAt: minutesAgo(2) })
+    expect(win.dataLayer).toHaveLength(1)
+    expect(store.calmear_signup_tracked_u1).toBe('1')
+  })
+
+  it('ignores existing accounts', async () => {
+    const { win } = stubBrowser()
+    const { trackSignUpOnce } = await loadModule()
+    trackSignUpOnce({ id: 'u2', createdAt: minutesAgo(31) })
+    trackSignUpOnce({ id: 'u3', createdAt: 'not a date' })
+    expect(win.dataLayer).toBeUndefined()
+  })
+
+  it('still tracks once when storage is blocked', async () => {
+    const win: { dataLayer?: Record<string, unknown>[] } = {}
+    vi.stubGlobal('window', win)
+    vi.stubGlobal('localStorage', {
+      getItem: () => { throw new Error('blocked') },
+      setItem: () => { throw new Error('blocked') },
+    })
+    const { trackSignUpOnce } = await loadModule()
+    trackSignUpOnce({ id: 'u4', createdAt: minutesAgo(1) })
+    trackSignUpOnce({ id: 'u4', createdAt: minutesAgo(1) })
+    expect(win.dataLayer).toEqual([{ event: 'sign_up', method: 'clerk' }])
+  })
+})

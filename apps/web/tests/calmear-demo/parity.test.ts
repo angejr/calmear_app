@@ -5,6 +5,10 @@
  * chrome/worker APIs stubbed out, and both implementations are run on the
  * same seeded signals. Results must be bit-identical.
  *
+ * One deliberate difference: the demo uses its own ERSM_ATT_DB (see
+ * constants.ts), so the extension's value is replaced by the demo's before
+ * its code is loaded. Everything else is the extension's code as shipped.
+ *
  * Skipped when the extension repository is not next to this one (e.g. in the
  * Docker build). Point CALMEAR_EXTENSION_DIR at calmear_extension/extension to
  * run it from elsewhere.
@@ -14,6 +18,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import vm from 'node:vm'
 import { describe, expect, it } from 'vitest'
+import { ERSM_ATT_DB } from '../../app/lib/calmear-demo/constants'
 import { applyErsm } from '../../app/lib/calmear-demo/ersm'
 import {
   applyReplacementClips,
@@ -142,7 +147,10 @@ function loadOffscreen(): OffscreenSandbox {
     atob,
   })
   vm.runInContext(readFileSync(join(EXT_DIR, 'preprocessing.js'), 'utf8'), ctx, { filename: 'preprocessing.js' })
-  vm.runInContext(readFileSync(join(EXT_DIR, 'offscreen.js'), 'utf8'), ctx, { filename: 'offscreen.js' })
+  const offscreen = readFileSync(join(EXT_DIR, 'offscreen.js'), 'utf8')
+  const attPattern = /const ERSM_ATT_DB(\s*)= -?\d+(\.\d+)?;/
+  if (!attPattern.test(offscreen)) throw new Error('ERSM_ATT_DB not found in offscreen.js')
+  vm.runInContext(offscreen.replace(attPattern, `const ERSM_ATT_DB$1= ${ERSM_ATT_DB};`), ctx, { filename: 'offscreen.js' })
   return { ctx, messages, run: <T>(code: string) => vm.runInContext(code, ctx) as T }
 }
 

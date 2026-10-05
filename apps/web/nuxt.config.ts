@@ -39,6 +39,8 @@ export default defineNuxtConfig({
       // Production: an external URL (bucket/CDN with CORS). Dev default: served
       // from the calmear_extension checkout by scripts/demo-model-dev-handler.ts.
       demoModelUrl: process.env.NUXT_PUBLIC_DEMO_MODEL_URL || DEMO_MODEL_DEV_ROUTE,
+      // Google Tag Manager container (GTM-XXXXXXX). Empty: GTM is not loaded.
+      gtmId: process.env.NUXT_PUBLIC_GTM_ID || '',
     },
   },
   devServerHandlers: [
