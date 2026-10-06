@@ -199,12 +199,19 @@ const contactEmail = 'ericmrleliko@gmail.com'
             stored only as one-way hashes and expire automatically after one year; you can revoke
             them at any time by signing out from the extension or your dashboard.
           </p>
+          <p class="text-neutral-700 leading-relaxed mb-4">
+            You can delete your account at any time from your account settings. Your CalmEar account
+            data is then deleted straight away, the extension is signed out, and any active
+            subscription is cancelled so you are not charged again (the current billing period is not
+            refunded). We keep only a one-way hash of your email address, which cannot be turned back
+            into the address, so that the free trial cannot be used twice. Limited records we are
+            required to keep for legal or accounting purposes (for example, Stripe payment records)
+            are also kept.
+          </p>
           <p class="text-neutral-700 leading-relaxed">
-            You can request deletion of your account and all associated data at any time by emailing
-            us at
-            <a :href="`mailto:${contactEmail}`" class="text-primary-600 hover:underline">{{ contactEmail }}</a>.
-            We will delete your records from our systems within 30 days, except where we are required
-            to keep limited records for legal or accounting purposes (for example, Stripe payment records).
+            You can also request deletion by emailing us at
+            <a :href="`mailto:${contactEmail}`" class="text-primary-600 hover:underline">{{ contactEmail }}</a>;
+            we will delete your records within 30 days.
           </p>
         </section>
 

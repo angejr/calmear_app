@@ -1,4 +1,4 @@
-import { getAuth } from '@clerk/nuxt/server'
+import { clerkClient, getAuth } from '@clerk/nuxt/server'
 import { createError } from 'h3'
 import type { H3Event } from 'h3'
 
@@ -19,4 +19,19 @@ export async function requireClerkAuth(event: H3Event): Promise<string> {
   }
 
   return userId
+}
+
+/**
+ * The user's email address from Clerk, or null if it cannot be fetched.
+ * Non-fatal: email is optional in our schema.
+ */
+export async function getClerkUserEmail(event: H3Event, clerkUserId: string): Promise<string | null> {
+  try {
+    const clerk = await clerkClient(event)
+    const clerkUser = await clerk.users.getUser(clerkUserId)
+    return clerkUser.emailAddresses[0]?.emailAddress ?? null
+  }
+  catch {
+    return null
+  }
 }

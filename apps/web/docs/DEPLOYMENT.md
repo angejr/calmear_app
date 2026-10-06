@@ -58,6 +58,7 @@ fly secrets set \
   NUXT_PUBLIC_APP_URL="https://calmear-app.com" \
   NUXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_live_..." \
   NUXT_CLERK_SECRET_KEY="sk_live_..." \
+  NUXT_CLERK_WEBHOOK_SIGNING_SECRET="whsec_..." \
   NUXT_DATABASE_URL="postgresql://postgres.<project-ref>:<password>@aws-0-eu-central-1.pooler.supabase.com:6543/postgres" \
   NUXT_STRIPE_SECRET_KEY="sk_live_..." \
   NUXT_STRIPE_WEBHOOK_SECRET="whsec_..." \
@@ -70,6 +71,7 @@ fly secrets set \
 | `NUXT_PUBLIC_APP_URL` | `https://calmear-app.com` (used for Stripe redirect URLs) |
 | `NUXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk dashboard → **Production** instance → API keys (`pk_live_`) |
 | `NUXT_CLERK_SECRET_KEY` | Clerk dashboard → **Production** instance → API keys (`sk_live_`) |
+| `NUXT_CLERK_WEBHOOK_SIGNING_SECRET` | Clerk dashboard → **Production** instance → Webhooks → endpoint `https://calmear-app.com/api/webhooks/clerk` (event `user.deleted`) → Signing secret (`whsec_`) |
 | `NUXT_DATABASE_URL` | Supabase → Settings → Database → **Transaction** pooler (port 6543) |
 | `NUXT_STRIPE_SECRET_KEY` | Stripe dashboard (Live mode) → Developers → API keys (`sk_live_`) |
 | `NUXT_STRIPE_WEBHOOK_SECRET` | Stripe (Live mode) → webhook endpoint created in step 9 (`whsec_`) |
@@ -126,6 +128,10 @@ needs the **Production instance**:
 3. **Domains**: ensure the production instance is configured for `calmear-app.com`
 4. Paths: sign-in/sign-up redirect URLs -> `/dashboard` (matches `nuxt.config.ts`)
 5. Copy `pk_live_` / `sk_live_` into the Fly secrets above
+6. Webhooks -> **Add endpoint**: URL `https://calmear-app.com/api/webhooks/clerk`,
+   event `user.deleted` -> copy its signing secret into
+   `NUXT_CLERK_WEBHOOK_SIGNING_SECRET`. When a user deletes their account in
+   Clerk, this deletes their CalmEar data and cancels their Stripe subscription.
 
 ## 9. Configure Stripe (Live mode)
 

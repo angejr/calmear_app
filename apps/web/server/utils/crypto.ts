@@ -9,6 +9,15 @@ export function sha256(value: string): string {
 }
 
 /**
+ * One-way hash of an email address (trimmed and lower-cased first, so the
+ * same address always gives the same hash). Used to recognise the email of
+ * a deleted account without storing the email itself.
+ */
+export function hashEmail(email: string): string {
+  return sha256(email.trim().toLowerCase())
+}
+
+/**
  * Generates cryptographically secure random bytes, returned as a hex string.
  * Default: 32 bytes → 64-character hex string.
  */

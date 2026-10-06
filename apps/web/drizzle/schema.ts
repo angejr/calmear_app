@@ -129,6 +129,30 @@ export const extensionSessions = pgTable('extension_sessions', {
 })
 
 // ---------------------------------------------------------------------------
+// deleted_accounts
+// When a user deletes their account, the users row (and, by cascade, their
+// extension codes and sessions) is removed. Only a one-way hash of the email
+// is kept here, so the same email signing up again does not get a second
+// free trial. Nothing else about the deleted user is retained.
+// ---------------------------------------------------------------------------
+
+export const deletedAccounts = pgTable('deleted_accounts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+
+  /** hashEmail(email): SHA-256 of the trimmed, lower-cased email */
+  emailHash: text('email_hash').notNull(),
+
+  /** Environment of the deleted account (see users.version) */
+  version: appVersionEnum('version').notNull(),
+
+  deletedAt: timestamp('deleted_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+}, (table) => [
+  uniqueIndex('deleted_accounts_version_email_hash_unique').on(table.version, table.emailHash),
+])
+
+// ---------------------------------------------------------------------------
 // Type exports
 // ---------------------------------------------------------------------------
 
@@ -136,3 +160,4 @@ export type User = typeof users.$inferSelect
 export type NewUser = typeof users.$inferInsert
 export type ExtensionPairingCode = typeof extensionPairingCodes.$inferSelect
 export type ExtensionSession = typeof extensionSessions.$inferSelect
+export type DeletedAccount = typeof deletedAccounts.$inferSelect

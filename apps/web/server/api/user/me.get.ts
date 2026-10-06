@@ -1,5 +1,4 @@
-import { getAuth, clerkClient } from '@clerk/nuxt/server'
-import { requireClerkAuth } from '../../utils/auth'
+import { getClerkUserEmail, requireClerkAuth } from '../../utils/auth'
 import { ensureUser } from '../../services/users'
 import { computeEntitlement } from '../../services/entitlement'
 
@@ -15,16 +14,8 @@ import { computeEntitlement } from '../../services/entitlement'
 export default defineEventHandler(async (event) => {
   const clerkUserId = await requireClerkAuth(event)
 
-  // Fetch email from Clerk to store on first creation
-  let email: string | null = null
-  try {
-    const clerk = await clerkClient(event)
-    const clerkUser = await clerk.users.getUser(clerkUserId)
-    email = clerkUser.emailAddresses[0]?.emailAddress ?? null
-  } catch {
-    // Non-fatal — email is optional in our schema
-  }
-
+  // Email from Clerk, stored on first creation
+  const email = await getClerkUserEmail(event, clerkUserId)
   const user = await ensureUser(clerkUserId, email)
   const entitlement = computeEntitlement(user)
 

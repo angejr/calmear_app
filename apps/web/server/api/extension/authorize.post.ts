@@ -1,4 +1,4 @@
-import { requireClerkAuth } from '../../utils/auth'
+import { getClerkUserEmail, requireClerkAuth } from '../../utils/auth'
 import { ensureUser } from '../../services/users'
 import { createAuthCode } from '../../services/extension-auth'
 
@@ -14,7 +14,9 @@ import { createAuthCode } from '../../services/extension-auth'
  */
 export default defineEventHandler(async (event) => {
   const clerkUserId = await requireClerkAuth(event)
-  const user = await ensureUser(clerkUserId)
+  // The email is needed when this call creates the account (sign-up from the
+  // extension), so a previously deleted email does not get a new trial.
+  const user = await ensureUser(clerkUserId, await getClerkUserEmail(event, clerkUserId))
 
   const body = await readBody(event)
   const redirectUri = body?.redirectUri as string | undefined
