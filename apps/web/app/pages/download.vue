@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import logoUrl from '~/assets/images/logo.webp'
 useSeoMeta({
   title: 'Download CalmEar — Chrome Extension',
   description: 'Install the CalmEar Chrome extension and connect it to your account.',
@@ -9,7 +10,7 @@ useSeoMeta({
   <div class="py-20 sm:py-28">
     <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
-        <img src="/icon.png" alt="CalmEar logo" class="mx-auto mb-6 h-20 w-20 object-contain rounded-3xl drop-shadow-sm" />
+        <img :src="logoUrl" alt="CalmEar logo" width="80" height="80" class="mx-auto mb-6 h-20 w-20 object-contain rounded-3xl drop-shadow-sm" />
         <h1 class="text-4xl font-bold text-neutral-900 mb-4">Install CalmEar</h1>
         <p class="text-lg text-neutral-600">Get started in a few minutes. Free for 30 days.</p>
       </div>

@@ -1,10 +1,12 @@
 /**
  * Google Tag Manager, on every page, when NUXT_PUBLIC_GTM_ID is set.
  *
- * The snippet is rendered into the server HTML (head script + body noscript),
- * as Google recommends, so GTM starts before hydration. Tags (e.g. the Reddit
- * Pixel) are configured in the GTM container, not here. Events are pushed to
- * the dataLayer with trackEvent() (app/utils/analytics.ts).
+ * gtm.js (and everything the container loads: Google tag, Reddit Pixel,
+ * Clarity...) is injected once the page has hydrated and the browser is idle
+ * (onNuxtReady), so these scripts do not compete with the page's own content
+ * while it loads. Events pushed before that (trackEvent) wait in
+ * window.dataLayer and are processed when GTM starts. The <noscript> fallback
+ * is rendered by the server. Tags are configured in the GTM container.
  */
 const GTM_ID_PATTERN = /^GTM-[A-Z0-9]+$/
 
@@ -17,15 +19,23 @@ export default defineNuxtPlugin(() => {
   }
 
   useHead({
-    script: [{
-      key: 'gtm',
-      tagPriority: 'high',
-      innerHTML: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${id}');`,
-    }],
     noscript: [{
       key: 'gtm-noscript',
       tagPosition: 'bodyOpen',
       innerHTML: `<iframe src="https://www.googletagmanager.com/ns.html?id=${id}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
     }],
+  })
+
+  if (import.meta.server) return
+
+  const w = window as Window & { dataLayer?: Record<string, unknown>[] }
+  w.dataLayer = w.dataLayer || []
+
+  onNuxtReady(() => {
+    w.dataLayer!.push({ 'gtm.start': Date.now(), 'event': 'gtm.js' })
+    const script = document.createElement('script')
+    script.async = true
+    script.src = `https://www.googletagmanager.com/gtm.js?id=${id}`
+    document.head.appendChild(script)
   })
 })

@@ -10,8 +10,8 @@ export default defineNuxtConfig({
   app: {
     head: {
       link: [
-        { rel: 'icon', type: 'image/png', href: '/icon.png' },
-        { rel: 'apple-touch-icon', href: '/icon.png' },
+        { rel: 'icon', type: 'image/png', sizes: '48x48', href: '/favicon-48.png' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
       ],
     },
   },
@@ -21,7 +21,17 @@ export default defineNuxtConfig({
     signInFallbackRedirectUrl: '/dashboard',
     signUpFallbackRedirectUrl: '/dashboard',
   },
-  css: ['~/assets/css/main.css'],
+  // Inter is self-hosted (@fontsource-variable) instead of loaded from Google
+  // Fonts: no render-blocking @import and no extra connections.
+  css: ['@fontsource-variable/inter/wght.css', '~/assets/css/main.css'],
+  routeRules: {
+    // Files in public/ are not content-hashed, so they get a bounded cache.
+    // (Hashed build assets under /_nuxt/ are already cached for a year.)
+    '/favicon-48.png': { headers: { 'cache-control': 'public, max-age=604800' } },
+    '/apple-touch-icon.png': { headers: { 'cache-control': 'public, max-age=604800' } },
+    '/demo/examples/**': { headers: { 'cache-control': 'public, max-age=86400' } },
+    '/demo/ort/**': { headers: { 'cache-control': 'public, max-age=2592000' } },
+  },
   runtimeConfig: {
     // Server-only secrets — never exposed to browser.
     // Each key is overridable at runtime via its NUXT_ environment variable

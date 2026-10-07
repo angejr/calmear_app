@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { PRICING } from '../../config/pricing'
+import logoUrl from '~/assets/images/logo.webp'
 const { isSignedIn } = useUser()
 useSeoMeta({
   title: 'CalmEar - Enjoy YouTube without distracting mouth sounds',
@@ -19,10 +20,12 @@ const steps = [
     <section class="bg-gradient-to-b from-primary-50 to-white pt-12 pb-12 sm:pt-16 sm:pb-14">
       <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
         <img
-          src="/icon-transparent.png"
+          :src="logoUrl"
           alt="CalmEar logo"
+          width="64"
+          height="64"
           class="mx-auto h-16 w-16 object-contain mb-6 drop-shadow-md"
-        />
+        >
         <div class="inline-flex items-center gap-2 rounded-full bg-primary-100 px-4 py-1.5 text-xs font-semibold text-primary-700 mb-6">
           <span class="h-1.5 w-1.5 rounded-full bg-primary-500" />
           {{ PRICING.trial.durationDays }}-day free trial · No credit card required
@@ -45,7 +48,7 @@ const steps = [
     </section>
 
     <!-- Interactive demo -->
-    <DemoSeeHowItWorks />
+    <LazyDemoSeeHowItWorks hydrate-on-visible />
 
     <!-- How it works -->
     <section id="how-it-works" class="border-t border-neutral-100 py-20 sm:py-28">
