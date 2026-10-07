@@ -70,6 +70,9 @@ export interface DemoExample {
   description: string
   original: string
   processed: string
+  /** Precomputed by scripts/build-demo-examples.ts so the waveform shows before the audio loads. */
+  duration_s?: number
+  peaks?: number[]
   events: SmackEvent[]
 }
 

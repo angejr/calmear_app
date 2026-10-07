@@ -2,6 +2,9 @@
  * Builds the pre-processed "Try an example" clips for the landing-page demo.
  *
  *   npm run demo:examples [-- --config <examples.json>] [--out <dir>] [--model <model.onnx>]
+ *   npm run demo:examples -- --peaks-only   # only (re)compute duration_s and the
+ *                                           # waveform peaks of the examples already
+ *                                           # in <out>/manifest.json (no model run)
  *
  * For each example listed in demo-examples/examples.json:
  *   1. ffmpeg decodes the source recording to 48 kHz stereo float PCM
@@ -27,6 +30,7 @@ import { fileURLToPath } from 'node:url'
 import * as ort from 'onnxruntime-web'
 import { DECODE_SAMPLE_RATE, NUM_MEL_BINS } from '../app/lib/calmear-demo/constants'
 import { processAudio } from '../app/lib/calmear-demo/pipeline'
+import { computePeaks } from '../app/lib/calmear-demo/waveform'
 
 const MAX_DURATION_S = 15
 const AAC_BITRATE = '192k'
@@ -71,6 +75,26 @@ function run(cmd: string, args: string[], input?: Buffer): Promise<Buffer> {
   })
 }
 
+/** Waveform shown before the audio is downloaded: duration and bar levels of the original. */
+function waveformInfo(channels: Float32Array[]) {
+  return {
+    duration_s: Math.round((channels[0]!.length / DECODE_SAMPLE_RATE) * 1000) / 1000,
+    peaks: computePeaks(channels),
+  }
+}
+
+async function updatePeaksOnly() {
+  const manifestPath = join(outDir, 'manifest.json')
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as { examples: Array<{ id: string, original: string }> }
+  for (const ex of manifest.examples) {
+    const file = join(outDir, ex.id, 'original.m4a')
+    console.warn(`[${ex.id}] waveform from ${relative(process.cwd(), file)}`)
+    Object.assign(ex, waveformInfo(await decode(file)))
+  }
+  writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`)
+  console.warn(`Updated ${manifest.examples.length} example(s) in ${relative(process.cwd(), manifestPath)}`)
+}
+
 async function decode(source: string, start?: number, duration?: number): Promise<Float32Array[]> {
   const args = ['-v', 'error']
   if (start !== undefined) args.push('-ss', String(start))
@@ -100,6 +124,7 @@ async function encodeAac(channels: Float32Array[], dest: string): Promise<void> 
 }
 
 async function main() {
+  if (process.argv.includes('--peaks-only')) return updatePeaksOnly()
   if (!existsSync(configPath)) {
     console.error(`No example config at ${configPath}. See the header of this script for the format.`)
     process.exit(1)
@@ -146,6 +171,7 @@ async function main() {
       description: ex.description,
       original: `${urlBase}/original.m4a`,
       processed: `${urlBase}/processed.m4a`,
+      ...waveformInfo(channels),
       events: result.events.map(e => ({
         startPts_s: Math.round(e.startPts_s * 1000) / 1000,
         endPts_s: Math.round(e.endPts_s * 1000) / 1000,

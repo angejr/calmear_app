@@ -16,14 +16,14 @@ const steps = [
 <template>
   <div>
     <!-- Hero -->
-    <section class="bg-gradient-to-b from-primary-50 to-white pt-16 pb-24 sm:pt-24 sm:pb-32">
+    <section class="bg-gradient-to-b from-primary-50 to-white pt-12 pb-12 sm:pt-16 sm:pb-14">
       <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
         <img
           src="/icon-transparent.png"
           alt="CalmEar logo"
-          class="mx-auto h-24 w-24 object-contain mb-8 drop-shadow-md"
+          class="mx-auto h-16 w-16 object-contain mb-6 drop-shadow-md"
         />
-        <div class="inline-flex items-center gap-2 rounded-full bg-primary-100 px-4 py-1.5 text-xs font-semibold text-primary-700 mb-8">
+        <div class="inline-flex items-center gap-2 rounded-full bg-primary-100 px-4 py-1.5 text-xs font-semibold text-primary-700 mb-6">
           <span class="h-1.5 w-1.5 rounded-full bg-primary-500" />
           {{ PRICING.trial.durationDays }}-day free trial · No credit card required
         </div>
@@ -33,17 +33,22 @@ const steps = [
         <p class="mt-6 text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
           CalmEar detects and reduces mouth smacks directly in your browser so you can focus on what you want to watch.
         </p>
-        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
           <NuxtLink v-if="isSignedIn" to="/dashboard" class="btn-primary text-base px-8 py-4">Go to Dashboard</NuxtLink>
           <SignUpButton v-else mode="modal"><button class="btn-primary text-base px-8 py-4">Try CalmEar Free</button></SignUpButton>
-          <NuxtLink to="#how-it-works" class="btn-secondary text-base px-8 py-4">See How It Works</NuxtLink>
+          <NuxtLink to="#demo" class="btn-secondary text-base px-8 py-4">
+            <svg class="h-4 w-4 text-primary-600" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z" /></svg>
+            Hear the difference
+          </NuxtLink>
         </div>
-        <p class="mt-4 text-sm text-neutral-500">{{ PRICING.trial.durationDays }}-day free trial · No credit card required</p>
       </div>
     </section>
 
+    <!-- Interactive demo -->
+    <DemoSeeHowItWorks />
+
     <!-- How it works -->
-    <section id="how-it-works" class="py-20 sm:py-28">
+    <section id="how-it-works" class="border-t border-neutral-100 py-20 sm:py-28">
       <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-14">
           <h2 class="text-3xl sm:text-4xl font-bold text-neutral-900">Get Started</h2>
@@ -59,9 +64,6 @@ const steps = [
         </div>
       </div>
     </section>
-
-    <!-- Interactive demo -->
-    <DemoSeeHowItWorks />
 
     <!-- Privacy -->
     <section class="bg-neutral-50 py-20 sm:py-28">
