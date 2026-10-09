@@ -1,5 +1,5 @@
 /**
- * Main-thread side of the "See how it works" demo. Loaded with a dynamic
+ * Main-thread side of the landing-page demo (components/demo/Demo.vue). Loaded with a dynamic
  * import() only when a visitor starts using the demo, so the landing page
  * never downloads the ML code, the ONNX runtime or the model otherwise.
  */

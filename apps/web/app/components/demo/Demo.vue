@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * "Hear the difference" landing-page demo. It opens on a real example
+ * Landing-page demo ("CalmEar in Action", <Demo> / <LazyDemo>). It opens on a real example
  * (waveform from the precomputed manifest; its audio is fetched on the first
  * play), with "Test your own clip" below. The demo client (and, through its
  * worker, the ONNX runtime and the model) is only loaded when the visitor
@@ -182,14 +182,13 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section id="demo" class="relative overflow-hidden bg-white pb-20 pt-4 sm:pb-28 sm:pt-6">
+  <section id="demo" class="relative overflow-hidden bg-white pb-20 pt-14 sm:pb-28 sm:pt-20">
     <!-- Soft glow behind the player -->
-    <div class="pointer-events-none absolute left-1/2 top-24 h-80 w-[40rem] max-w-full -translate-x-1/2 rounded-full bg-primary-200/40 blur-3xl" aria-hidden="true" />
+    <div class="pointer-events-none absolute left-1/2 top-36 h-80 w-[40rem] max-w-full -translate-x-1/2 rounded-full bg-primary-200/40 blur-3xl" aria-hidden="true" />
 
     <div class="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
       <div class="mb-8 text-center">
-        <h2 class="text-3xl font-bold text-neutral-900 sm:text-4xl">Hear the difference</h2>
-        <p class="mt-3 text-neutral-600">A real clip, before and after CalmEar. Nothing to install.</p>
+        <h2 class="text-3xl font-bold text-neutral-900 sm:text-4xl">CalmEar in Action</h2>
       </div>
 
       <div class="rounded-3xl border border-primary-100 bg-white/90 p-5 shadow-xl shadow-primary-900/5 ring-1 ring-black/[0.02] backdrop-blur sm:p-8" aria-live="polite">

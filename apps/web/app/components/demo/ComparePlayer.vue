@@ -213,7 +213,7 @@ onBeforeUnmount(() => {
         <button
           type="button"
           class="rounded-full px-4 py-2 text-sm font-semibold transition-all sm:px-5"
-          :class="active === 'original' ? 'bg-white text-neutral-900 shadow-sm' : 'text-neutral-500 hover:text-neutral-800'"
+          :class="active === 'original' ? 'bg-primary-600 text-white shadow-sm' : 'text-neutral-500 hover:text-neutral-800'"
           :aria-pressed="active === 'original'"
           @click="select('original')"
         >
@@ -230,14 +230,12 @@ onBeforeUnmount(() => {
           @click="select('processed')"
         >
           <span v-if="nudge" class="absolute inset-0 animate-ping rounded-full bg-primary-300/40" aria-hidden="true" />
-          <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-8 8a1 1 0 01-1.4 0l-4-4a1 1 0 111.4-1.4L8 12.58l7.3-7.3a1 1 0 011.4 0z" clip-rule="evenodd" /></svg>
           With CalmEar
         </button>
       </div>
     </div>
     <p class="mt-3 h-5 text-center text-sm" :class="nudge ? 'font-medium text-primary-700' : 'text-neutral-500'">
       <template v-if="nudge">Now switch to "With CalmEar" and listen again.</template>
-      <template v-else-if="!playing && position === 0">Press play, then switch between the two versions.</template>
     </p>
 
     <!-- Player -->
