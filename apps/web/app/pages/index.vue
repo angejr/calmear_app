@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { PRICING } from '../../config/pricing'
+import { LINKS } from '../../config/links'
 import logoUrl from '~/assets/images/logo.webp'
 const { isSignedIn } = useUser()
 useSeoMeta({
@@ -7,11 +8,14 @@ useSeoMeta({
   description: 'CalmEar detects and reduces mouth smacks in your browser. 30-day free trial.',
 })
 
-const steps = [
-  { number: 1, emoji: '🧩', title: 'Install CalmEar', description: 'Add the CalmEar extension to Chrome from the Chrome Web Store.' },
-  { number: 2, emoji: '🔐', title: 'Sign in to your account', description: 'Create a free CalmEar account. Your 30-day trial starts automatically.' },
-  { number: 3, emoji: '🎬', title: 'Watch in peace', description: 'Open any YouTube video. CalmEar silently reduces mouth sounds in real time.' },
-]
+const steps = {
+  install: { number: 1, emoji: '🧩', title: 'Install CalmEar', description: 'Add the CalmEar extension to Chrome from the Chrome Web Store.' },
+  account: { number: 2, emoji: '🔐', title: 'Sign in to your account', description: 'Create a free CalmEar account. Your 30-day trial starts automatically.' },
+  watch: { number: 3, emoji: '🎬', title: 'Watch in peace', description: 'Open any YouTube video. CalmEar silently reduces mouth sounds in real time.' },
+}
+
+/** Clickable step: a card-sized hit area with a hover highlight. */
+const stepLinkClass = 'group block w-full rounded-2xl p-4 -m-4 transition-colors hover:bg-primary-50/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-600'
 </script>
 
 <template>
@@ -58,12 +62,21 @@ const steps = [
           <p class="mt-3 text-neutral-600">Get started in three simple steps.</p>
         </div>
         <div class="grid sm:grid-cols-3 gap-8">
-          <div v-for="step in steps" :key="step.number" class="text-center">
-            <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-100 text-2xl">{{ step.emoji }}</div>
-            <div class="text-xs font-bold text-primary-600 uppercase tracking-widest mb-2">Step {{ step.number }}</div>
-            <h3 class="text-lg font-semibold text-neutral-900 mb-2">{{ step.title }}</h3>
-            <p class="text-sm text-neutral-600 leading-relaxed">{{ step.description }}</p>
-          </div>
+          <!-- Step 1: Chrome Web Store (new tab) -->
+          <a :href="LINKS.chromeWebStore" target="_blank" rel="noopener" :class="stepLinkClass">
+            <LandingGetStartedStep v-bind="steps.install" action="external" />
+          </a>
+          <!-- Step 2: sign-up window (it also offers "Sign in"); dashboard when already signed in -->
+          <NuxtLink v-if="isSignedIn" to="/dashboard" :class="stepLinkClass">
+            <LandingGetStartedStep v-bind="steps.account" action="internal" />
+          </NuxtLink>
+          <SignUpButton v-else mode="modal">
+            <button type="button" :class="stepLinkClass">
+              <LandingGetStartedStep v-bind="steps.account" action="internal" />
+            </button>
+          </SignUpButton>
+          <!-- Step 3 -->
+          <LandingGetStartedStep v-bind="steps.watch" />
         </div>
       </div>
     </section>

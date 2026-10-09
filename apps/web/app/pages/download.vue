@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import logoUrl from '~/assets/images/logo.webp'
+import { LINKS } from '../../config/links'
 useSeoMeta({
   title: 'Download CalmEar — Chrome Extension',
   description: 'Install the CalmEar Chrome extension and connect it to your account.',
@@ -22,7 +23,7 @@ useSeoMeta({
             <h3 class="font-semibold text-neutral-900 mb-1">Install the Chrome extension</h3>
             <p class="text-sm text-neutral-600 mb-3">Add CalmEar from the Chrome Web Store.</p>
             <a
-              href="https://chrome.google.com/webstore"
+              :href="LINKS.chromeWebStore"
               target="_blank"
               rel="noopener"
               class="btn-primary text-sm py-2 px-5 inline-flex"
