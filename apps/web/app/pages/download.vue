@@ -37,33 +37,29 @@ useSeoMeta({
         <div class="card p-6 flex gap-5">
           <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-100 font-bold text-primary-700">2</div>
           <div>
-            <h3 class="font-semibold text-neutral-900 mb-1">Create a CalmEar account</h3>
-            <p class="text-sm text-neutral-600 mb-3">Sign up for free. Your 30-day trial starts automatically — no credit card required.</p>
-            <SignUpButton mode="modal">
-              <button class="btn-outline text-sm py-2 px-5">Create free account</button>
-            </SignUpButton>
+            <h3 class="font-semibold text-neutral-900 mb-1">Sign in from the extension</h3>
+            <p class="text-sm text-neutral-600 mb-3">
+              Click the CalmEar icon in Chrome's toolbar, then <strong>Sign in / Create account</strong>.
+              A CalmEar tab opens: sign in, or create a free account. Your 30-day trial starts
+              automatically, no credit card required.
+            </p>
+            <p class="text-sm text-neutral-600">
+              The extension connects to your account on its own and the tab closes after a few seconds.
+              If you are already signed in on this website, it connects straight away.
+            </p>
+            <p class="mt-3 text-xs text-neutral-500">
+              Can't see the CalmEar icon? Click the puzzle piece 🧩 in Chrome's toolbar, then the pin next to CalmEar.
+            </p>
           </div>
         </div>
 
         <div class="card p-6 flex gap-5">
           <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-100 font-bold text-primary-700">3</div>
           <div>
-            <h3 class="font-semibold text-neutral-900 mb-1">Connect the extension to your account</h3>
-            <p class="text-sm text-neutral-600 mb-3">
-              Go to your dashboard, click <strong>Connect Chrome Extension</strong>, and enter the
-              one-time pairing code in the CalmEar extension popup.
-            </p>
-            <NuxtLink to="/dashboard" class="btn-secondary text-sm py-2 px-5 inline-flex">Go to Dashboard</NuxtLink>
-          </div>
-        </div>
-
-        <div class="card p-6 flex gap-5">
-          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-100 font-bold text-primary-700">4</div>
-          <div>
             <h3 class="font-semibold text-neutral-900 mb-1">Watch YouTube in peace</h3>
             <p class="text-sm text-neutral-600">
-              Open any YouTube video. CalmEar will silently detect and reduce mouth sounds in real time.
-              You can toggle it on or off from the extension popup at any time.
+              Open any YouTube video. CalmEar detects and reduces mouth sounds as you watch.
+              You can turn it on or off from the extension popup at any time.
             </p>
           </div>
         </div>
