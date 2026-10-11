@@ -74,7 +74,7 @@ describe('trackSignUpOnce', () => {
     const { win } = stubBrowser()
     const { trackSignUpOnce } = await loadModule()
     trackSignUpOnce({ id: 'u1', createdAt: minutesAgo(1) })
-    expect(win.dataLayer).toEqual([{ event: 'sign_up', method: 'clerk' }])
+    expect(win.dataLayer).toMatchObject([{ event: 'sign_up', method: 'clerk' }])
   })
 
   it('does not count the same account twice (reload, later visit)', async () => {
@@ -89,6 +89,26 @@ describe('trackSignUpOnce', () => {
     mod.trackSignUpOnce({ id: 'u1', createdAt: minutesAgo(2) })
     expect(win.dataLayer).toHaveLength(1)
     expect(store.calmear_signup_tracked_u1).toBe('1')
+  })
+
+  it('resolves once GTM has run its tags (eventCallback), so a redirect can wait for it', async () => {
+    const { win } = stubBrowser()
+    const { trackSignUpOnce } = await loadModule()
+    let resolved = false
+    const done = trackSignUpOnce({ id: 'u5', createdAt: minutesAgo(1) }).then(() => { resolved = true })
+    await Promise.resolve()
+    expect(resolved).toBe(false)
+    const entry = win.dataLayer![0] as { eventCallback: () => void, eventTimeout: number }
+    expect(entry.eventTimeout).toBeGreaterThan(0)
+    entry.eventCallback()
+    await done
+    expect(resolved).toBe(true)
+  })
+
+  it('resolves immediately when there is nothing to track', async () => {
+    stubBrowser()
+    const { trackSignUpOnce } = await loadModule()
+    await expect(trackSignUpOnce({ id: 'old', createdAt: minutesAgo(90) })).resolves.toBeUndefined()
   })
 
   it('ignores existing accounts', async () => {
@@ -109,6 +129,6 @@ describe('trackSignUpOnce', () => {
     const { trackSignUpOnce } = await loadModule()
     trackSignUpOnce({ id: 'u4', createdAt: minutesAgo(1) })
     trackSignUpOnce({ id: 'u4', createdAt: minutesAgo(1) })
-    expect(win.dataLayer).toEqual([{ event: 'sign_up', method: 'clerk' }])
+    expect(win.dataLayer).toMatchObject([{ event: 'sign_up', method: 'clerk' }])
   })
 })

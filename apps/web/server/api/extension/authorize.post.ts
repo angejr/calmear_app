@@ -32,5 +32,7 @@ export default defineEventHandler(async (event) => {
   return {
     code: rawCode,
     expiresAt: expiresAt.toISOString(),
+    // Lets the authorize page report a sign-up made from the extension.
+    account: { id: user.id, createdAt: user.createdAt.toISOString() },
   }
 })

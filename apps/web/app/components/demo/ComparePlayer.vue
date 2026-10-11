@@ -20,7 +20,17 @@ const props = defineProps<{
   peaks?: number[]
   duration?: number
   loadAudio?: () => Promise<Buffers>
+  /** Sent with the tracking events: 'example:<id>' or 'upload'. */
+  source?: string
 }>()
+
+/** Funnel steps, sent to the GTM dataLayer once per player. */
+const tracked = new Set<string>()
+function trackOnce(event: string) {
+  if (tracked.has(event)) return
+  tracked.add(event)
+  trackEvent(event, { demo_source: props.source ?? 'example' })
+}
 
 const SWITCH_RAMP_S = 0.01
 const NUDGE_AFTER_S = 2.5
@@ -141,6 +151,7 @@ async function play(from: number) {
     position.value = 0
   }
   nodes = { sources, gains }
+  trackOnce('demo_play')
   startedAt = when
   startOffset = offset
   playing.value = true
@@ -161,6 +172,7 @@ function togglePlay() {
 
 function select(track: Track) {
   if (track !== active.value) hasSwitched.value = true
+  if (track === 'processed') trackOnce('demo_switch_calmear')
   active.value = track
   if (nodes && ctx) {
     const t = ctx.currentTime

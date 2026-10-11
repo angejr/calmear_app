@@ -14,7 +14,6 @@ type ClientModule = typeof import('~/lib/calmear-demo/client')
 type Stage = 'idle' | 'selected' | 'working' | 'result' | 'error'
 type WorkStep = 'reading' | 'model-download' | 'model-init' | 'analyzing'
 
-const { isSignedIn } = useUser()
 const config = useRuntimeConfig()
 const modelUrl = config.public.demoModelUrl as string
 
@@ -118,6 +117,7 @@ async function onFileChange(event: Event) {
     return
   }
   stage.value = 'selected'
+  trackEvent('demo_upload_selected')
   modelInfo.value = null
   c.modelDownloadInfo(modelUrl).then((info) => {
     if (file.value === picked) modelInfo.value = info
@@ -152,6 +152,7 @@ async function processFile() {
     if (file.value !== picked) return
     result.value = res
     stage.value = 'result'
+    trackEvent('demo_upload_processed', { mouth_sounds: res.events.length })
   }
   catch (err) {
     if (file.value === picked) handleFailure(err)
@@ -231,6 +232,7 @@ onBeforeUnmount(() => {
               :peaks="example.peaks"
               :duration="example.duration_s"
               :load-audio="loadExampleAudio"
+              :source="`example:${example.id}`"
             />
             <div class="mt-8 border-t border-neutral-100 pt-6 text-center">
               <button type="button" class="btn-secondary px-6" @click="chooseFile">
@@ -288,7 +290,7 @@ onBeforeUnmount(() => {
               {{ reducedLabel(result.events.length) }}
             </span>
           </div>
-          <DemoComparePlayer :original="result.original" :processed="result.processed" :events="result.events" />
+          <DemoComparePlayer :original="result.original" :processed="result.processed" :events="result.events" source="upload" />
           <div class="mt-8 flex flex-col justify-center gap-3 border-t border-neutral-100 pt-6 sm:flex-row">
             <button type="button" class="btn-secondary" @click="chooseFile">Try another clip</button>
             <button v-if="example" type="button" class="btn-secondary" @click="reset">Back to the example</button>
@@ -314,8 +316,7 @@ onBeforeUnmount(() => {
         <p class="text-lg font-semibold text-neutral-900">Want this on every YouTube video?</p>
         <p class="mt-1 text-neutral-600">CalmEar does it automatically while you watch.</p>
         <div class="mt-5">
-          <NuxtLink v-if="isSignedIn" to="/dashboard" class="btn-primary px-8 py-4 text-base">Go to Dashboard</NuxtLink>
-          <SignUpButton v-else mode="modal"><button class="btn-primary px-8 py-4 text-base">Try CalmEar free</button></SignUpButton>
+          <AddToChromeButton location="demo" />
         </div>
         <p class="mt-3 text-sm text-neutral-500">{{ PRICING.trial.durationDays }}-day free trial · No credit card required</p>
       </div>

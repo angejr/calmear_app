@@ -22,28 +22,44 @@ export function trackEvent(event: string, params: Record<string, unknown> = {}):
 const SIGN_UP_WINDOW_MS = 30 * 60 * 1000
 const trackedThisSession = new Set<string>()
 
+/** Longest wait for GTM to process an event before a page navigates away. */
+const TAG_WAIT_MS = 1500
+
 /**
- * Pushes `sign_up` once per new CalmEar account. The account is created on the
- * first /api/user/me call after the Clerk sign-up (the dashboard), so a recent
- * createdAt identifies a sign-up; a localStorage flag stops reloads and later
- * visits from counting it again.
+ * Pushes `sign_up` once per new CalmEar account. The account is created on
+ * the first call to /api/user/me (dashboard) or /api/extension/authorize
+ * (sign-in from the extension), so a recent createdAt identifies a sign-up; a
+ * localStorage flag stops reloads and later visits from counting it again.
+ *
+ * Resolves once GTM has run its tags for the event (or after TAG_WAIT_MS, e.g.
+ * when GTM is blocked), so a page that redirects right after can await it.
+ * Resolves immediately when nothing is tracked.
  */
-export function trackSignUpOnce(user: { id: string, createdAt: string }): void {
-  if (import.meta.server) return
+export function trackSignUpOnce(user: { id: string, createdAt: string }): Promise<void> {
+  if (import.meta.server) return Promise.resolve()
   const age = Date.now() - new Date(user.createdAt).getTime()
-  if (!Number.isFinite(age) || age > SIGN_UP_WINDOW_MS) return
+  if (!Number.isFinite(age) || age > SIGN_UP_WINDOW_MS) return Promise.resolve()
 
   const key = `calmear_signup_tracked_${user.id}`
-  if (trackedThisSession.has(key)) return
+  if (trackedThisSession.has(key)) return Promise.resolve()
   trackedThisSession.add(key)
   try {
-    if (localStorage.getItem(key)) return
+    if (localStorage.getItem(key)) return Promise.resolve()
     localStorage.setItem(key, '1')
   }
   catch {
     // Storage blocked: the in-memory set still prevents duplicates on this page.
   }
-  trackEvent('sign_up', { method: 'clerk' })
+  return new Promise((resolve) => {
+    const timer = setTimeout(resolve, TAG_WAIT_MS)
+    pushDataLayer({
+      event: 'sign_up',
+      method: 'clerk',
+      // GTM calls this after its tags have fired for the event.
+      eventCallback: () => { clearTimeout(timer); resolve() },
+      eventTimeout: TAG_WAIT_MS,
+    })
+  })
 }
 
 /** Plan chosen before leaving for Stripe Checkout, read back on the success return. */

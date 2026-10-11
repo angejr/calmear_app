@@ -22,10 +22,13 @@ async function authorize() {
   authorizing.value = true
   error.value = null
   try {
-    const res = await $fetch<{ code: string; expiresAt: string }>('/api/extension/authorize', {
+    const res = await $fetch<{ code: string; expiresAt: string; account?: { id: string; createdAt: string } }>('/api/extension/authorize', {
       method: 'POST',
       body: { redirectUri },
     })
+    // Account just created here (sign-up from the extension): report it before
+    // leaving the site. Waits for GTM at most a moment; no wait otherwise.
+    if (res.account) await trackSignUpOnce(res.account)
     // Redirect to the extension callback page with the short-lived code and state.
     window.location.href = `${redirectUri}?code=${encodeURIComponent(res.code)}&state=${encodeURIComponent(state!)}`
   }

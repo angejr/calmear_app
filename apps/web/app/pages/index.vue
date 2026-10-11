@@ -4,8 +4,8 @@ import { LINKS } from '../../config/links'
 import logoUrl from '~/assets/images/logo.webp'
 const { isSignedIn } = useUser()
 useSeoMeta({
-  title: 'CalmEar - Enjoy YouTube without distracting mouth sounds',
-  description: 'CalmEar detects and reduces mouth smacks in your browser. 30-day free trial.',
+  title: 'CalmEar - Watch YouTube without mouth smacking sounds',
+  description: 'Chrome extension for misophonia: CalmEar detects mouth smacks and lip smacking in YouTube videos and reduces them as you watch. 30-day free trial.',
 })
 
 const steps = {
@@ -32,22 +32,31 @@ const stepLinkClass = 'group block w-full rounded-2xl p-4 -m-4 transition-colors
         >
         <div class="inline-flex items-center gap-2 rounded-full bg-primary-100 px-4 py-1.5 text-xs font-semibold text-primary-700 mb-6">
           <span class="h-1.5 w-1.5 rounded-full bg-primary-500" />
-          {{ PRICING.trial.durationDays }}-day free trial · No credit card required
+          Made for misophonia
         </div>
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-neutral-900 leading-tight">
-          Enjoy YouTube without<br /><span class="text-primary-600">distracting mouth sounds.</span>
+          Watch YouTube without<br class="hidden sm:inline" /> <span class="text-primary-600">mouth smacking sounds.</span>
         </h1>
         <p class="mt-6 text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-          CalmEar detects and reduces mouth smacks directly in your browser so you can focus on what you want to watch.
+          CalmEar detects mouth smacks and lip smacking in YouTube videos and reduces them as you watch, so the sounds that trigger you fade into the background.
         </p>
         <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <NuxtLink v-if="isSignedIn" to="/dashboard" class="btn-primary text-base px-8 py-4">Go to Dashboard</NuxtLink>
-          <SignUpButton v-else mode="modal"><button class="btn-primary text-base px-8 py-4">Try CalmEar Free</button></SignUpButton>
+          <AddToChromeButton location="hero" />
           <NuxtLink to="#get-started" class="btn-secondary text-base px-8 py-4">
             Get Started
             <svg class="h-4 w-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
           </NuxtLink>
         </div>
+        <p class="mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-neutral-500 sm:gap-x-2">
+          <span class="inline-flex items-center gap-1.5">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" /></svg>
+            <span><strong class="font-semibold text-neutral-700">Free Chrome extension for desktop</strong></span>
+          </span>
+          <span class="hidden sm:inline" aria-hidden="true">·</span>
+          <span>{{ PRICING.trial.durationDays }}-day free trial</span>
+          <span class="hidden sm:inline" aria-hidden="true">·</span>
+          <span>No credit card required</span>
+        </p>
       </div>
     </section>
 
@@ -138,10 +147,7 @@ const stepLinkClass = 'group block w-full rounded-2xl p-4 -m-4 transition-colors
       <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
         <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Ready to enjoy your content in peace?</h2>
         <p class="text-primary-100 mb-8 text-lg">Try CalmEar free for {{ PRICING.trial.durationDays }} days.</p>
-        <NuxtLink v-if="isSignedIn" to="/dashboard" class="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-primary-700 shadow-md hover:bg-primary-50 transition-colors">Go to Dashboard</NuxtLink>
-        <SignUpButton v-else mode="modal"><button class="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-primary-700 shadow-md hover:bg-primary-50 transition-colors">
-            Try free for {{ PRICING.trial.durationDays }} days
-          </button></SignUpButton>
+        <AddToChromeButton location="final" variant="white" />
       </div>
     </section>
   </div>
