@@ -118,6 +118,21 @@ export async function resolveExtensionToken(rawToken: string): Promise<User> {
   return user
 }
 
+/** Whether the user has a signed-in extension (an unrevoked, unexpired session). */
+export async function hasActiveExtensionSession(userId: string): Promise<boolean> {
+  const db = useDb()
+  const rows = await db
+    .select({ id: extensionSessions.id })
+    .from(extensionSessions)
+    .where(and(
+      eq(extensionSessions.userId, userId),
+      isNull(extensionSessions.revokedAt),
+      gt(extensionSessions.expiresAt, new Date()),
+    ))
+    .limit(1)
+  return rows.length > 0
+}
+
 export async function revokeExtensionToken(rawToken: string): Promise<void> {
   const db = useDb()
   const tokenHash = sha256(rawToken)

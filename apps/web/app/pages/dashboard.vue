@@ -10,7 +10,7 @@ interface Entitlement {
 }
 interface UserData { id: string; email: string | null; subscriptionStatus: string; createdAt: string }
 
-const { data, pending, error, refresh } = await useFetch<{ user: UserData; entitlement: Entitlement }>('/api/user/me')
+const { data, pending, error, refresh } = await useFetch<{ user: UserData; entitlement: Entitlement; extension: { connected: boolean } }>('/api/user/me')
 console.log(data)
 
 const billingLoading = ref<string | null>(null)
@@ -78,6 +78,36 @@ function formatDate(iso?: string | null): string {
   return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
+// Until the extension is signed in, the dashboard shows how to install it and
+// re-checks when the user comes back to this tab (and every few seconds while
+// it is visible), so "connected" appears without a manual reload.
+const extensionConnected = computed(() => data.value?.extension?.connected ?? false)
+const CONNECTION_POLL_MS = 8000
+const CONNECTION_POLL_MAX_MS = 15 * 60 * 1000
+let connectionPoll: ReturnType<typeof setInterval> | null = null
+
+function checkConnectionIfVisible() {
+  if (document.visibilityState === 'visible' && !extensionConnected.value) refresh()
+}
+
+function stopConnectionChecks() {
+  if (connectionPoll) clearInterval(connectionPoll)
+  connectionPoll = null
+  document.removeEventListener('visibilitychange', checkConnectionIfVisible)
+}
+
+onMounted(() => {
+  if (extensionConnected.value) return
+  const startedAt = Date.now()
+  document.addEventListener('visibilitychange', checkConnectionIfVisible)
+  connectionPoll = setInterval(() => {
+    if (Date.now() - startedAt > CONNECTION_POLL_MAX_MS) stopConnectionChecks()
+    else checkConnectionIfVisible()
+  }, CONNECTION_POLL_MS)
+})
+watch(extensionConnected, (connected) => { if (connected) stopConnectionChecks() })
+onUnmounted(stopConnectionChecks)
+
 function daysRemaining(iso?: string | null): number {
   if (!iso) return 0
   return Math.max(0, Math.ceil((new Date(iso).getTime() - Date.now()) / 86400000))
@@ -119,6 +149,41 @@ function daysRemaining(iso?: string | null): number {
       </div>
 
       <template v-else-if="data">
+        <!-- Next step after sign-up: install and connect the extension -->
+        <div v-if="!extensionConnected" class="card mb-6 border-primary-200 p-8 ring-1 ring-primary-100">
+          <div class="mb-1 text-xs font-bold uppercase tracking-widest text-primary-600">Next step</div>
+          <h2 class="text-xl font-bold text-neutral-900">Install the CalmEar extension</h2>
+          <p class="mt-1 text-sm text-neutral-600">Your account is ready. Install the extension and CalmEar works on every YouTube video.</p>
+          <ol class="mt-6 space-y-5">
+            <li class="flex gap-4">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700">1</span>
+              <div>
+                <p class="mb-3 font-medium text-neutral-900">Add CalmEar to Chrome</p>
+                <AddToChromeButton location="dashboard">Add to Chrome</AddToChromeButton>
+              </div>
+            </li>
+            <li class="flex gap-4">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700">2</span>
+              <div>
+                <p class="font-medium text-neutral-900">Sign in from the extension</p>
+                <p class="mt-1 text-sm text-neutral-600">
+                  Click the CalmEar icon in Chrome's toolbar, then <strong>Sign in / Create account</strong>.
+                  You are already signed in here, so it connects straight away.
+                </p>
+                <p class="mt-2 text-xs text-neutral-500">Can't see the icon? Click the puzzle piece 🧩 in the toolbar, then the pin next to CalmEar.</p>
+              </div>
+            </li>
+          </ol>
+          <p class="mt-6 flex items-center gap-2 text-sm text-neutral-500">
+            <span class="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-primary-200 border-t-primary-600" aria-hidden="true" />
+            Waiting for the extension to connect…
+          </p>
+        </div>
+        <div v-else class="card mb-6 flex items-center gap-3 border-green-200 bg-green-50 p-5">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700" aria-hidden="true">✓</span>
+          <p class="text-sm text-green-900"><strong>Extension connected.</strong> Open any YouTube video and CalmEar does the rest.</p>
+        </div>
+
         <div v-if="data.entitlement.plan === 'trial'" class="card p-8 mb-6">
           <div class="flex items-start gap-4 mb-5">
             <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-2xl">🎁</div>
@@ -133,7 +198,7 @@ function daysRemaining(iso?: string | null): number {
           </div>
           <div v-if="billingError" class="mb-4 text-sm text-red-600 bg-red-50 rounded-lg p-3">{{ billingError }}</div>
           <div class="flex flex-col sm:flex-row gap-3">
-            <button class="btn-primary" :disabled="!!billingLoading" @click="subscribe('yearly')">{{ billingLoading === 'yearly' ? 'Loading…' : 'Upgrade Annual (€39.99/yr)' }}</button>
+            <button class="btn-outline" :disabled="!!billingLoading" @click="subscribe('yearly')">{{ billingLoading === 'yearly' ? 'Loading…' : 'Upgrade Annual (€39.99/yr)' }}</button>
             <button class="btn-secondary" :disabled="!!billingLoading" @click="subscribe('monthly')">{{ billingLoading === 'monthly' ? 'Loading…' : 'Upgrade Monthly (€4.99/mo)' }}</button>
           </div>
         </div>

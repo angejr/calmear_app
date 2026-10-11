@@ -1,12 +1,13 @@
 import { getClerkUserEmail, requireClerkAuth } from '../../utils/auth'
 import { ensureUser } from '../../services/users'
 import { computeEntitlement } from '../../services/entitlement'
+import { hasActiveExtensionSession } from '../../services/extension-auth'
 
 /**
  * GET /api/user/me
  *
- * Returns the current authenticated user's CalmEar application data
- * and computed entitlement. Creates the CalmEar user on first call
+ * Returns the current authenticated user's CalmEar application data,
+ * computed entitlement, and whether the extension is signed in. Creates the CalmEar user on first call
  * (idempotent — safe to call multiple times).
  *
  * Authentication: Clerk session (website cookie)
@@ -31,5 +32,6 @@ export default defineEventHandler(async (event) => {
       createdAt: user.createdAt.toISOString(),
     },
     entitlement,
+    extension: { connected: await hasActiveExtensionSession(user.id) },
   }
 })

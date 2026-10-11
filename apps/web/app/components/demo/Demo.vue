@@ -316,7 +316,7 @@ onBeforeUnmount(() => {
         <p class="text-lg font-semibold text-neutral-900">Want this on every YouTube video?</p>
         <p class="mt-1 text-neutral-600">CalmEar does it automatically while you watch.</p>
         <div class="mt-5">
-          <AddToChromeButton location="demo" />
+          <StartTrialButton location="demo" />
         </div>
         <p class="mt-3 text-sm text-neutral-500">{{ PRICING.trial.durationDays }}-day free trial · No credit card required</p>
       </div>

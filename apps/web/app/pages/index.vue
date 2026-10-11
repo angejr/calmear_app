@@ -9,9 +9,13 @@ useSeoMeta({
 })
 
 const steps = {
-  install: { number: 1, emoji: '🧩', title: 'Install CalmEar', description: 'Add the CalmEar extension to Chrome from the Chrome Web Store.' },
-  account: { number: 2, emoji: '🔐', title: 'Sign in to your account', description: 'Create a free CalmEar account. Your 30-day trial starts automatically.' },
+  account: { number: 1, emoji: '🔐', title: 'Create your free account', description: 'Your 30-day trial starts automatically. No credit card required.' },
+  install: { number: 2, emoji: '🧩', title: 'Install CalmEar', description: 'Add the extension from the Chrome Web Store, then click its icon and sign in.' },
   watch: { number: 3, emoji: '🎬', title: 'Watch in peace', description: 'Open any YouTube video. CalmEar silently reduces mouth sounds in real time.' },
+}
+
+function onStepSignUp() {
+  trackEvent('signup_open', { cta_location: 'steps' })
 }
 
 /** Clickable step: a card-sized hit area with a hover highlight. */
@@ -35,13 +39,13 @@ const stepLinkClass = 'group block w-full rounded-2xl p-4 -m-4 transition-colors
           Made for misophonia
         </div>
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-neutral-900 leading-tight">
-          Watch YouTube without<br class="hidden sm:inline" /> <span class="text-primary-600">mouth smacking sounds.</span>
+          Watch YouTube without<br class="hidden sm:inline"> <span class="text-primary-600">mouth smacking sounds.</span>
         </h1>
         <p class="mt-6 text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
           CalmEar detects mouth smacks and lip smacking in YouTube videos and reduces them as you watch, so the sounds that trigger you fade into the background.
         </p>
         <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <AddToChromeButton location="hero" />
+          <StartTrialButton location="hero" />
           <NuxtLink to="#get-started" class="btn-secondary text-base px-8 py-4">
             Get Started
             <svg class="h-4 w-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
@@ -71,19 +75,19 @@ const stepLinkClass = 'group block w-full rounded-2xl p-4 -m-4 transition-colors
           <p class="mt-3 text-neutral-600">Get started in three simple steps.</p>
         </div>
         <div class="grid sm:grid-cols-3 gap-8">
-          <!-- Step 1: Chrome Web Store (new tab) -->
-          <a :href="LINKS.chromeWebStore" target="_blank" rel="noopener" :class="stepLinkClass">
-            <LandingGetStartedStep v-bind="steps.install" action="external" />
-          </a>
-          <!-- Step 2: sign-up window (it also offers "Sign in"); dashboard when already signed in -->
+          <!-- Step 1: sign-up window (it also offers "Sign in"); dashboard when already signed in -->
           <NuxtLink v-if="isSignedIn" to="/dashboard" :class="stepLinkClass">
             <LandingGetStartedStep v-bind="steps.account" action="internal" />
           </NuxtLink>
           <SignUpButton v-else mode="modal">
-            <button type="button" :class="stepLinkClass">
+            <button type="button" :class="stepLinkClass" @click="onStepSignUp">
               <LandingGetStartedStep v-bind="steps.account" action="internal" />
             </button>
           </SignUpButton>
+          <!-- Step 2: Chrome Web Store (new tab) -->
+          <a :href="LINKS.chromeWebStore" target="_blank" rel="noopener" :class="stepLinkClass">
+            <LandingGetStartedStep v-bind="steps.install" action="external" />
+          </a>
           <!-- Step 3 -->
           <LandingGetStartedStep v-bind="steps.watch" />
         </div>
@@ -147,7 +151,7 @@ const stepLinkClass = 'group block w-full rounded-2xl p-4 -m-4 transition-colors
       <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
         <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Ready to enjoy your content in peace?</h2>
         <p class="text-primary-100 mb-8 text-lg">Try CalmEar free for {{ PRICING.trial.durationDays }} days.</p>
-        <AddToChromeButton location="final" variant="white" />
+        <StartTrialButton location="final" variant="white" />
       </div>
     </section>
   </div>
