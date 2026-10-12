@@ -34,6 +34,9 @@ function trackOnce(event: string) {
 
 const SWITCH_RAMP_S = 0.01
 const NUDGE_AFTER_S = 2.5
+/** "Hear it up close": audio kept on each side of a mouth sound (~1 s in total). */
+const CLOSEUP_PAD_S = 0.4
+const CLOSEUP_GAP_MS = 350
 
 const active = ref<Track>('original')
 const playing = ref(false)
@@ -41,6 +44,9 @@ const loading = ref(false)
 const loadFailed = ref(false)
 const position = ref(0)
 const hasSwitched = ref(false)
+/** Close-up being played: which mouth sound, and which version right now. */
+const closeup = ref<{ index: number, phase: Track } | null>(null)
+let closeupRun = 0
 
 const buffers = shallowRef<Buffers | null>(props.original && props.processed ? { original: props.original, processed: props.processed } : null)
 watch(() => [props.original, props.processed] as const, ([o, p]) => {
@@ -75,6 +81,8 @@ let nodes: { sources: AudioBufferSourceNode[], gains: Record<Track, GainNode> } 
 let startedAt = 0
 let startOffset = 0
 let raf = 0
+/** Resolves the promise returned by play(): true when it ended on its own. */
+let pendingEnd: ((completed: boolean) => void) | null = null
 
 function currentTime(): number {
   if (!ctx || !playing.value) return position.value
@@ -101,6 +109,9 @@ function stopNodes() {
   nodes.gains.original.disconnect()
   nodes.gains.processed.disconnect()
   nodes = null
+  const end = pendingEnd
+  pendingEnd = null
+  end?.(false)
 }
 
 function stop() {
@@ -126,13 +137,17 @@ async function ensureBuffers(): Promise<Buffers | null> {
   return buffers.value
 }
 
-async function play(from: number) {
+/**
+ * Plays both versions in sync from `from` (to the end, or for `length` s).
+ * Resolves true when playback ended on its own, false when it was stopped.
+ */
+async function play(from: number, length?: number): Promise<boolean> {
   ctx ??= new AudioContext()
   // Resume within the click, before any await, so browsers allow the audio.
   const resumed = ctx.state === 'suspended' ? ctx.resume() : Promise.resolve()
   const b = await ensureBuffers()
   await resumed
-  if (!b || !ctx) return
+  if (!b || !ctx) return false
   stopNodes()
   const offset = from >= duration.value - 0.01 ? 0 : from
   const gains = { original: ctx.createGain(), processed: ctx.createGain() }
@@ -145,10 +160,17 @@ async function play(from: number) {
     return s
   })
   const when = ctx.currentTime + 0.02
-  for (const s of sources) s.start(when, offset)
+  for (const s of sources) {
+    if (length) s.start(when, offset, length)
+    else s.start(when, offset)
+  }
+  const finished = new Promise<boolean>((resolve) => { pendingEnd = resolve })
   sources[0]!.onended = () => {
+    const end = pendingEnd
+    pendingEnd = null
     stop()
-    position.value = 0
+    position.value = length ? Math.min(duration.value, offset + length) : 0
+    end?.(true)
   }
   nodes = { sources, gains }
   trackOnce('demo_play')
@@ -157,6 +179,7 @@ async function play(from: number) {
   playing.value = true
   cancelAnimationFrame(raf)
   raf = requestAnimationFrame(tick)
+  return finished
 }
 
 function pause() {
@@ -166,13 +189,20 @@ function pause() {
 
 function togglePlay() {
   if (loading.value) return
+  cancelCloseup()
   if (playing.value) pause()
   else play(position.value)
 }
 
 function select(track: Track) {
+  cancelCloseup()
   if (track !== active.value) hasSwitched.value = true
   if (track === 'processed') trackOnce('demo_switch_calmear')
+  setTrack(track)
+}
+
+/** Makes `track` the audible version (10 ms crossfade if playing). */
+function setTrack(track: Track) {
   active.value = track
   if (nodes && ctx) {
     const t = ctx.currentTime
@@ -185,7 +215,35 @@ function select(track: Track) {
   }
 }
 
+function cancelCloseup() {
+  closeupRun++
+  closeup.value = null
+}
+
+/**
+ * Plays ~1 s around mouth sound `index`: first the original, then, after a
+ * short pause, the same second with CalmEar.
+ */
+async function playCloseup(index: number) {
+  const e = props.events[index]
+  if (!e || loading.value) return
+  const run = ++closeupRun
+  trackOnce('demo_closeup')
+  const from = Math.max(0, e.startPts_s - CLOSEUP_PAD_S)
+  const to = e.endPts_s + CLOSEUP_PAD_S
+  for (const phase of ['original', 'processed'] as const) {
+    if (run !== closeupRun) return
+    closeup.value = { index, phase }
+    setTrack(phase)
+    const completed = await play(from, Math.min(duration.value || to, to) - from)
+    if (run !== closeupRun || !completed) return
+    if (phase === 'original') await new Promise(resolve => setTimeout(resolve, CLOSEUP_GAP_MS))
+  }
+  if (run === closeupRun) closeup.value = null
+}
+
 function seekTo(t: number) {
+  cancelCloseup()
   position.value = Math.max(0, Math.min(duration.value, t))
   if (playing.value) play(position.value)
 }
@@ -211,6 +269,7 @@ function barClass(i: number): string {
 }
 
 onBeforeUnmount(() => {
+  cancelCloseup()
   stop()
   ctx?.close().catch(() => {})
   ctx = null
@@ -246,8 +305,9 @@ onBeforeUnmount(() => {
         </button>
       </div>
     </div>
-    <p class="mt-3 h-5 text-center text-sm" :class="nudge ? 'font-medium text-primary-700' : 'text-neutral-500'">
-      <template v-if="nudge">Now switch to "With CalmEar" and listen again.</template>
+    <p class="mt-3 h-5 text-center text-sm" :class="closeup || nudge ? 'font-medium text-primary-700' : 'text-neutral-500'">
+      <template v-if="closeup">Sound {{ closeup.index + 1 }}: {{ closeup.phase === 'original' ? 'original' : 'with CalmEar' }}</template>
+      <template v-else-if="nudge">Now switch to "With CalmEar" and listen again.</template>
     </p>
 
     <!-- Player -->
@@ -300,6 +360,30 @@ onBeforeUnmount(() => {
           <span v-else />
           <span class="tabular-nums text-neutral-500">{{ formatTime(position) }} / {{ formatTime(duration) }}</span>
         </div>
+      </div>
+    </div>
+    <!-- Hear it up close: each mouth sound, original then with CalmEar -->
+    <div v-if="events.length" class="mt-6 rounded-2xl bg-neutral-50 p-4 ring-1 ring-inset ring-neutral-100">
+      <div class="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+        <p class="text-sm font-semibold text-neutral-900">Hear each mouth sound up close</p>
+        <p class="text-xs text-neutral-500">1 second of the original, then the same second with CalmEar</p>
+      </div>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button
+          v-for="(e, i) in events"
+          :key="i"
+          type="button"
+          class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium ring-1 ring-inset transition-colors"
+          :class="closeup?.index === i
+            ? (closeup.phase === 'original' ? 'bg-amber-50 text-amber-800 ring-amber-300' : 'bg-primary-50 text-primary-800 ring-primary-300')
+            : 'bg-white text-neutral-700 ring-neutral-200 hover:bg-neutral-100'"
+          :aria-label="`Hear mouth sound ${i + 1} at ${formatTime(e.startPts_s)}, original then with CalmEar`"
+          @click="playCloseup(i)"
+        >
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z" /></svg>
+          Sound {{ i + 1 }}
+          <span class="tabular-nums text-neutral-400">{{ formatTime(e.startPts_s) }}</span>
+        </button>
       </div>
     </div>
     <p v-if="loadFailed" class="mt-3 text-center text-sm text-amber-700">The audio could not be loaded. Please check your connection and press play again.</p>

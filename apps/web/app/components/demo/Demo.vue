@@ -2,11 +2,11 @@
 /**
  * Landing-page demo ("CalmEar in Action", <Demo> / <LazyDemo>). It opens on a real example
  * (waveform from the precomputed manifest; its audio is fetched on the first
- * play), with "Test your own clip" below. The demo client (and, through its
+ * play), the sign-up call to action right under it, and a "test your own
+ * clip" link below. The demo client (and, through its
  * worker, the ONNX runtime and the model) is only loaded when the visitor
  * plays the example or uploads a clip.
  */
-import { PRICING } from '../../../config/pricing'
 import examplesManifest from '../../../public/demo/examples/manifest.json'
 import type { DemoErrorCode, DemoExample, DemoProcessor, DemoResult } from '~/lib/calmear-demo/client'
 
@@ -234,13 +234,12 @@ onBeforeUnmount(() => {
               :load-audio="loadExampleAudio"
               :source="`example:${example.id}`"
             />
-            <div class="mt-8 border-t border-neutral-100 pt-6 text-center">
-              <button type="button" class="btn-secondary px-6" @click="chooseFile">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>
-                Test your own clip
-              </button>
-              <p class="mt-3 text-xs text-neutral-500">MP4 or WebM, up to 15 seconds. Processed on your device, never uploaded.</p>
-            </div>
+            <DemoTrialCta />
+            <p class="mt-5 text-center text-sm text-neutral-500">
+              Have a clip of your own?
+              <button type="button" class="font-medium text-primary-700 underline-offset-4 hover:underline" @click="chooseFile">Test it here</button>
+              <span class="block text-xs text-neutral-400">MP4 or WebM, up to 15 seconds. Processed on your device, never uploaded.</span>
+            </p>
           </template>
           <div v-else class="text-center">
             <button type="button" class="btn-primary px-8 py-4 text-base" @click="chooseFile">Test your own clip</button>
@@ -291,10 +290,11 @@ onBeforeUnmount(() => {
             </span>
           </div>
           <DemoComparePlayer :original="result.original" :processed="result.processed" :events="result.events" source="upload" />
-          <div class="mt-8 flex flex-col justify-center gap-3 border-t border-neutral-100 pt-6 sm:flex-row">
-            <button type="button" class="btn-secondary" @click="chooseFile">Try another clip</button>
-            <button v-if="example" type="button" class="btn-secondary" @click="reset">Back to the example</button>
-          </div>
+          <DemoTrialCta />
+          <p class="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm">
+            <button type="button" class="font-medium text-primary-700 underline-offset-4 hover:underline" @click="chooseFile">Try another clip</button>
+            <button v-if="example" type="button" class="font-medium text-neutral-500 underline-offset-4 hover:underline" @click="reset">Back to the example</button>
+          </p>
         </div>
 
         <!-- Error -->
@@ -311,15 +311,6 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <!-- Conversion -->
-      <div v-if="stage === 'idle' || stage === 'result'" class="mt-10 text-center">
-        <p class="text-lg font-semibold text-neutral-900">Want this on every YouTube video?</p>
-        <p class="mt-1 text-neutral-600">CalmEar does it automatically while you watch.</p>
-        <div class="mt-5">
-          <StartTrialButton location="demo" />
-        </div>
-        <p class="mt-3 text-sm text-neutral-500">{{ PRICING.trial.durationDays }}-day free trial · No credit card required</p>
-      </div>
     </div>
   </section>
 </template>
