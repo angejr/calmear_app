@@ -4,7 +4,7 @@ useSeoMeta({
   description: 'How CalmEar handles your data. Audio processing happens locally in your browser — we never upload the audio you listen to.',
 })
 
-const lastUpdated = '5 October 2026'
+const lastUpdated = '26 October 2026'
 const contactEmail = 'ericmrleliko@gmail.com'
 </script>
 
@@ -113,6 +113,12 @@ const contactEmail = 'ericmrleliko@gmail.com'
             or subscribe. We do not send your email address or your
             CalmEar account details to Reddit.
           </p>
+          <p id="feedback" class="text-neutral-700 leading-relaxed mb-4">
+            When you send feedback (from the feedback page, or the page that opens after you remove the
+            extension), we store your answer, your message, the extension version when the page provides
+            it, and your email address only if you type it in to get a reply. Feedback is not linked to
+            your account and is used only to improve CalmEar and to reply to you.
+          </p>
           <p class="text-neutral-700 leading-relaxed">
             We do not collect your name (beyond what your email or Google account provides), address,
             phone number, browsing history outside our website, watch history, or any content from the
@@ -198,6 +204,10 @@ const contactEmail = 'ericmrleliko@gmail.com'
             We keep your account data for as long as your account exists. Extension login tokens are
             stored only as one-way hashes and expire automatically after one year; you can revoke
             them at any time by signing out from the extension or your dashboard.
+          </p>
+          <p class="text-neutral-700 leading-relaxed mb-4">
+            Feedback you send is kept for up to two years, then deleted. Because it is not linked to
+            your account, deleting your account does not delete it: email us and we will remove it.
           </p>
           <p class="text-neutral-700 leading-relaxed mb-4">
             You can delete your account at any time from your account settings. Your CalmEar account

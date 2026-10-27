@@ -153,6 +153,42 @@ export const deletedAccounts = pgTable('deleted_accounts', {
 ])
 
 // ---------------------------------------------------------------------------
+// feedback
+// Answers sent from /feedback (the extension's "Send feedback" link) and
+// /uninstalled (opened by Chrome when the extension is removed). Not linked
+// to an account: the email is stored only when the person types it to get a
+// reply.
+// ---------------------------------------------------------------------------
+
+export const feedbackSourceEnum = pgEnum('feedback_source', [
+  'feedback',
+  'uninstall',
+])
+
+export const feedback = pgTable('feedback', {
+  id: uuid('id').primaryKey().defaultRandom(),
+
+  source: feedbackSourceEnum('source').notNull(),
+
+  /** Topic (feedback) or reason (uninstall) key, see services/feedback.ts */
+  reason: text('reason'),
+  message: text('message'),
+
+  /** Only when given in the form, to get a reply */
+  email: text('email'),
+
+  /** Extension version from /uninstalled?v=, when present */
+  extensionVersion: text('extension_version'),
+
+  /** Environment that received it (see users.version) */
+  version: appVersionEnum('version').notNull(),
+
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+})
+
+// ---------------------------------------------------------------------------
 // Type exports
 // ---------------------------------------------------------------------------
 
@@ -161,3 +197,5 @@ export type NewUser = typeof users.$inferInsert
 export type ExtensionPairingCode = typeof extensionPairingCodes.$inferSelect
 export type ExtensionSession = typeof extensionSessions.$inferSelect
 export type DeletedAccount = typeof deletedAccounts.$inferSelect
+export type Feedback = typeof feedback.$inferSelect
+export type NewFeedback = typeof feedback.$inferInsert

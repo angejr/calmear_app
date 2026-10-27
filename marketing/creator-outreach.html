@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CalmEar creator outreach</title>
+<style>
+  :root {
+    --bg: #f7faf9; --card: #ffffff; --text: #111827; --muted: #4b5563; --dim: #6b7280;
+    --border: #e5e7eb; --accent: #1b7370; --accent-soft: #e6f4f3; --warn: #92400e; --warn-soft: #fef3c7;
+    --p1: #1b7370; --p2: #2563eb; --p3: #7c3aed;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1514; --card: #161e1d; --text: #e5e7eb; --muted: #a8b3b1; --dim: #8a9593;
+      --border: #26302f; --accent: #5cc4bd; --accent-soft: #15302e; --warn: #fbbf24; --warn-soft: #3a2c0b;
+      --p1: #5cc4bd; --p2: #7aa7ff; --p3: #b79bff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1200px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 26px; margin: 0 0 6px; }
+  h2 { font-size: 20px; margin: 36px 0 8px; }
+  .intro { color: var(--muted); margin: 0 0 20px; max-width: 820px; }
+  .rules { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; margin-bottom: 22px; color: var(--muted); font-size: 14px; }
+  .rules b { color: var(--text); }
+  .rules ul { margin: 6px 0 0; padding-left: 18px; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .filters button { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 999px; padding: 6px 14px; font: inherit; font-size: 13px; cursor: pointer; }
+  .filters button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .table th, .table td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+  .table th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--dim); background: var(--bg); }
+  .table tr:last-child td { border-bottom: 0; }
+  .prio { display: inline-block; font-weight: 700; font-size: 12px; border-radius: 999px; padding: 2px 9px; color: #fff; }
+  .prio.p1 { background: var(--p1); } .prio.p2 { background: var(--p2); } .prio.p3 { background: var(--p3); }
+  .name { font-weight: 600; }
+  .sub { color: var(--dim); font-size: 13px; }
+  .channel { font-size: 13px; }
+  .channel code { background: var(--accent-soft); color: var(--accent); padding: 1px 6px; border-radius: 6px; font-size: 13px; word-break: break-all; }
+  .subject { font-size: 13px; color: var(--muted); }
+  details summary { cursor: pointer; color: var(--accent); font-weight: 600; font-size: 13px; }
+  .msg { white-space: pre-wrap; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 8px; font-size: 13.5px; max-width: 560px; }
+  .actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .copy { border: 1px solid var(--accent); background: transparent; color: var(--accent); border-radius: 8px; padding: 4px 10px; font: inherit; font-size: 12.5px; cursor: pointer; }
+  .copy.done { background: var(--accent); color: #fff; }
+  .note { margin-top: 8px; font-size: 12.5px; color: var(--warn); background: var(--warn-soft); border-radius: 8px; padding: 6px 9px; max-width: 560px; }
+  a { color: var(--accent); }
+  @media (max-width: 860px) {
+    .table thead { display: none; }
+    .table, .table tbody, .table tr, .table td { display: block; width: 100%; }
+    .table tr { border-bottom: 1px solid var(--border); padding: 6px 0; }
+    .table td { border: 0; padding: 6px 14px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>CalmEar creator outreach</h1>
+  <p class="intro">One message per contact, written for that person. Contacts checked on 24 October 2026; emails are only listed where the person or organisation publishes them. Private messages (TikTok, Instagram) contain no link and no "free"/"paid" wording, to avoid spam filters: send the link once they reply.</p>
+
+  <div class="rules">
+    <b>Before sending each message</b>
+    <ul>
+      <li>Replace anything in <b>[square brackets]</b> and remove any sentence that is not true for you.</li>
+      <li>Send one at a time, a few per day. Follow up once after 5 to 7 days, then stop.</li>
+      <li>Put a warning before any mouth sounds you share, and never make medical claims.</li>
+      <li>Sponsored content must be labelled as an ad by the creator (TikTok and Instagram "paid partnership" label; required by law in many countries, including France).</li>
+    </ul>
+  </div>
+
+  <h2>Creators, podcasts and organisations</h2>
+  <div class="filters" role="group" aria-label="Filter creators by priority" data-target="rows">
+    <button type="button" data-filter="all" aria-pressed="true">All</button>
+    <button type="button" data-filter="1" aria-pressed="false">Priority 1: misophonia specialists</button>
+    <button type="button" data-filter="2" aria-pressed="false">Priority 2: professionals and organisations</button>
+    <button type="button" data-filter="3" aria-pressed="false">Priority 3: paid sponsorship</button>
+  </div>
+
+  <table class="table">
+    <thead><tr><th>Priority</th><th>Contact</th><th>Channel</th><th>Subject</th><th>Message</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <h2>Tool lists and "best extensions" articles</h2>
+  <p class="intro">Authors of pages that list tools or Chrome extensions for misophonia, neurodivergent users or accessibility. The goal is to be added to their list, not a paid placement. Contacts checked on 25 October 2026. Each message names the article it refers to: open the page before sending, check CalmEar is not already listed, and mention something specific from it.</p>
+  <div class="filters" role="group" aria-label="Filter lists by priority" data-target="list-rows">
+    <button type="button" data-filter="all" aria-pressed="true">All</button>
+    <button type="button" data-filter="1" aria-pressed="false">Priority 1: misophonia tool pages</button>
+    <button type="button" data-filter="2" aria-pressed="false">Priority 2: neurodiversity and ADHD lists</button>
+    <button type="button" data-filter="3" aria-pressed="false">Priority 3: weaker fit</button>
+  </div>
+
+  <table class="table">
+    <thead><tr><th>Priority</th><th>List and author</th><th>Channel</th><th>Subject</th><th>Message</th></tr></thead>
+    <tbody id="list-rows"></tbody>
+  </table>
+</main>
+
+<script>
+const SIG = `Ange Ndoudi
+Founder, CalmEar
+calmear-app.com`;
+const DEMO = `You can hear a before/after example at calmear-app.com (heads-up: the "Original" track contains mouth sounds).`;
+
+const contacts = [
+  {
+    p: 1, name: 'soQuiet', sub: 'Misophonia nonprofit · TikTok 574 followers · YouTube 508 subscribers',
+    link: 'https://www.soquiet.org/contact',
+    channel: 'Email', address: 'hello@soquiet.org',
+    subject: 'A tool for mouth sounds in YouTube videos, from someone with misophonia',
+    message: `Hi soQuiet team,
+
+My name is Ange Ndoudi. I have misophonia, and the work you do, from your videos to the tools and resources you share, makes a real difference for people like me.
+
+Mouth sounds in YouTube videos have always been one of my hardest triggers, so I built CalmEar: a Chrome extension for desktop that detects mouth smacks and lip smacking in YouTube videos and reduces them as the video plays. The detection runs entirely on the user's computer; no audio is recorded or uploaded.
+
+I'd love to offer free access to your community and hear honest feedback from your members, especially about what CalmEar still misses. If it proves useful, I'd be glad to discuss how CalmEar could support soQuiet's work, and I'd be grateful if you would consider adding it to your Free Misophonia Tools & Resources page.
+
+${DEMO}
+
+Would you be open to a short call, or would you prefer I send more details by email?
+
+Thank you for everything you do for our community.
+
+${SIG}`,
+    note: 'Partnership, not a paid post. Mention a specific soQuiet video or resource you found helpful if you can. Also asks to be added to their tools page (soquiet.org/misophoniatools); if you already sent an earlier version, raise it when they reply.',
+  },
+  {
+    p: 1, name: 'The Misophonia Podcast', sub: 'Host: Adeel Ahmad · interviews with people who have misophonia',
+    link: 'https://misophoniapodcast.com/',
+    channel: 'Email', address: 'hello@misophoniapodcast.com',
+    subject: 'Guest idea: I have misophonia and built a tool that reduces mouth sounds in YouTube videos',
+    message: `Hi Adeel,
+
+My name is Ange Ndoudi. I have misophonia, and I really appreciate that The Misophonia Podcast takes the care to edit its episodes so they are sensory-friendly. [If you have listened: mention an episode that stayed with you.]
+
+Mouth sounds in YouTube videos have always been one of my worst triggers, so I built CalmEar, a Chrome extension that detects mouth smacks in YouTube videos and reduces them as the video plays, entirely on the user's computer.
+
+I'd love to come on the show as a guest to talk about living with misophonia, why I decided to build something about it, and what I learned along the way, including what the tool still can't do. I'm not looking for a promotional segment; I'm happy to keep it a genuine conversation.
+
+Separately, if the podcast accepts sponsors, I'd be interested in sponsoring an episode. Could you share your terms?
+
+${DEMO}
+
+Thank you for creating such a valuable space for misophones.
+
+${SIG}`,
+    note: 'Best first contact: free, and your story fits the show exactly. The "Misophonia" iPhone app (Lab 1908 LLC) lists this same address: if they reply, you can suggest mentioning each other.',
+  },
+  {
+    p: 1, name: 'Misophonia Association', sub: 'Education, advocacy, research and support',
+    link: 'https://misophonia-association.org/',
+    channel: 'Email', address: 'info@misophonia-association.org',
+    subject: 'Introducing CalmEar, a tool that reduces mouth sounds in YouTube videos',
+    message: `Hello,
+
+My name is Ange Ndoudi. I have misophonia, and I built CalmEar, a Chrome extension for desktop that detects mouth smacks and lip smacking in YouTube videos and reduces them as the video plays. All processing happens on the user's computer; no audio is recorded or uploaded.
+
+I'm writing for two reasons:
+
+1. I'd like to offer free access to your members and hear their honest feedback.
+2. If you keep a list of resources or tools for people with misophonia, I'd be grateful if you would consider CalmEar for it, once you've had a chance to try it.
+
+I'd also be interested to hear about your events, if there's a way for a small project like mine to take part.
+
+${DEMO}
+
+I'm happy to send more details or set up a call.
+
+Best regards,
+
+${SIG}`,
+    note: '',
+  },
+  {
+    p: 1, name: 'Tom Dozier', sub: 'Misophonia Centers · YouTube 4,210 subscribers · sells misophonia treatment',
+    link: 'https://misophoniatreatment.com/',
+    channel: 'Email', address: 'tom@misophoniatreatment.com',
+    subject: 'A complementary comfort tool for clients who struggle with mouth sounds in videos',
+    message: `Hi Tom,
+
+My name is Ange Ndoudi. I have misophonia, and I came across your YouTube channel and your videos explaining the condition.
+
+I built CalmEar, a Chrome extension that detects mouth smacks in YouTube videos and reduces them as the video plays, with all processing on the user's computer. It isn't a treatment, just a comfort tool for one specific situation, so I thought it might complement the work you do with your clients.
+
+Would you like to try it, free of charge, and tell me what you think? If you find it useful, I'd love to discuss whether it could be worth mentioning to your clients or your audience.
+
+${DEMO}
+
+Best regards,
+
+${SIG}`,
+    note: 'He sells his own solution: present CalmEar as complementary, never as an alternative.',
+  },
+  {
+    p: 1, name: 'Brooklyn (Misophonia Relief)', sub: 'TikTok @rewiremisophonia · 1,085 followers · sells a relief programme',
+    link: 'https://rewiremisophonia.com/',
+    channel: 'Contact form', address: 'rewiremisophonia.com',
+    subject: 'Collaboration idea from a fellow misophone',
+    message: `Hi Brooklyn,
+
+My name is Ange Ndoudi. I have misophonia, and I came across your TikTok, where you share your work helping people find relief from misophonia.
+
+I built CalmEar, a Chrome extension that reduces mouth smacks in YouTube videos as they play. It's a comfort tool for one specific trigger, so I see it as complementary to the work you do with your clients rather than a replacement.
+
+Would you be open to trying it, free of charge? If you like it, I'd love to explore a collaboration, for example a video for your audience, on terms that work for you.
+
+${DEMO}
+
+Thank you,
+
+${SIG}`,
+    note: 'She sells her own programme: lead with "complementary".',
+  },
+  {
+    p: 1, name: 'Jax (Misophonia Coach)', sub: 'TikTok @jaxskemper · 677 followers',
+    link: 'https://www.tiktok.com/@jaxskemper',
+    channel: 'TikTok message', address: '@jaxskemper',
+    subject: '(private message, no subject)',
+    message: `Hi Jax! I really like how openly you talk about your own experience with misophonia. I have misophonia too, and mouth sounds in YouTube videos are one of my worst triggers, so I built a small tool that reduces them while you watch. I'd love your honest opinion on it. Would it be OK if I sent you the details?`,
+    note: 'His bio says "Sevryn: Sound Regulation coming soon". Check what Sevryn is before sending: it may be a competing product.',
+  },
+  {
+    p: 1, name: 'Misophonia Hub', sub: 'TikTok @misophoniahub · 141 followers',
+    link: 'https://www.tiktok.com/@misophoniahub',
+    channel: 'TikTok message', address: '@misophoniahub',
+    subject: '(private message, no subject)',
+    message: `Hi! Your bio ("yes i have misophonia, not faking") made me smile. I have misophonia too, and mouth sounds in YouTube videos are one of my worst triggers, so I built a small tool that reduces them while you watch. Would you be up for trying it and telling me honestly what you think? Happy to send the details.`,
+    note: '',
+  },
+  {
+    p: 1, name: 'Miss Misophonia', sub: 'TikTok @missmisophonia · 78 followers',
+    link: 'https://www.tiktok.com/@missmisophonia',
+    channel: 'TikTok message', address: '@missmisophonia',
+    subject: '(private message, no subject)',
+    message: `Hi! Thank you for spreading misophonia awareness, it really matters. I have misophonia too, and mouth sounds in YouTube videos are one of my worst triggers, so I built a small tool that reduces them while you watch. I'd love your honest opinion on it. Would it be OK if I sent you the details?`,
+    note: '',
+  },
+  {
+    p: 1, name: 'misophonia_misery (support group)', sub: 'Instagram · audience not verified',
+    link: 'https://www.instagram.com/misophonia_misery/',
+    channel: 'Instagram message', address: '@misophonia_misery',
+    subject: '(private message, no subject)',
+    message: `Hi! Thank you for creating such a supportive space for people living with misophonia. I have misophonia too, and I built a small tool that reduces mouth sounds in YouTube videos while you watch. I'd love to offer it to your community and hear their honest feedback. Would you be open to me sending the details?`,
+    note: 'According to search results the account is run by Kaitlyn Bristowe and Bri Cook (not verified): check the profile before addressing them by name.',
+  },
+  {
+    p: 2, name: 'Dr Jane Gregory', sub: 'Sounds Like Misophonia · psychologist and author · Instagram @soundslikemiso',
+    link: 'https://www.soundslikemisophonia.com/contact',
+    channel: 'Contact form', address: 'soundslikemisophonia.com/contact',
+    subject: 'A comfort tool for people who struggle with mouth sounds in videos',
+    message: `Dear Dr Gregory,
+
+My name is Ange Ndoudi. I have misophonia, and I came across Sounds Like Misophonia while looking for resources about the condition.
+
+I built CalmEar, a Chrome extension that detects mouth smacks in YouTube videos and reduces them as the video plays, processing everything on the user's computer. It is a comfort tool, not a treatment, and I'm careful not to present it otherwise.
+
+I'd be grateful for your professional view. Would you be willing to try it, free of charge, and tell me whether you think it could help some of the people you work with? Any feedback, including criticism, would be valuable.
+
+${DEMO}
+
+Kind regards,
+
+${SIG}`,
+    note: 'Professional contact: no sponsorship request in the first message.',
+  },
+  {
+    p: 2, name: 'Misophonia Research Fund', sub: 'Funds misophonia research',
+    link: 'https://www.misophoniaresearchfund.org/contact',
+    channel: 'Contact form', address: 'misophoniaresearchfund.org/contact',
+    subject: 'Introducing CalmEar, a tool for mouth sounds in YouTube videos',
+    message: `Hello,
+
+My name is Ange Ndoudi. I have misophonia, and I built CalmEar, a Chrome extension that detects mouth smacks in YouTube videos and reduces them as the video plays. The detection is a machine-learning model that runs on the user's computer; no audio is recorded or uploaded.
+
+I'm writing to let you know it exists, and to ask whether you list tools or community resources where it could be useful. If it would help researchers or study participants, I'm happy to provide free access and to share how the detection works.
+
+${DEMO}
+
+Best regards,
+
+${SIG}`,
+    note: '',
+  },
+  {
+    p: 2, name: 'International Misophonia Foundation', sub: 'The Misophonia Show (Shaylynn Hayes-Raymond)',
+    link: 'https://misophoniafoundation.com/',
+    channel: 'Social media or podcast page', address: 'No email found (their contact page returns an error)',
+    subject: '(private message, no subject)',
+    message: `Hi Shaylynn, my name is Ange Ndoudi. I have misophonia and I built a small tool that reduces mouth sounds in YouTube videos while you watch. I'd love to share my story as a guest on The Misophonia Show, including what the tool can and can't do. Would that be of interest? Happy to send the details.`,
+    note: 'Send through their social media or the podcast page. Written without a link so it also works as a private message.',
+  },
+  {
+    p: 2, name: 'Duke Center for Misophonia (CMER)', sub: 'University research centre',
+    link: 'https://psychiatry.duke.edu/duke-center-misophonia-and-emotion-regulation',
+    channel: 'Contact form', address: 'Form on the centre\'s website',
+    subject: 'For information: a comfort tool for mouth sounds in YouTube videos',
+    message: `Hello,
+
+My name is Ange Ndoudi. I have misophonia, and I built CalmEar, a Chrome extension that detects mouth smacks in YouTube videos and reduces them as the video plays, with all processing on the user's computer.
+
+It is a comfort tool, not a treatment. I wanted to let your team know it exists, in case it is useful to mention as a practical option, and I would welcome any feedback from your clinicians. Free access is available on request.
+
+${DEMO}
+
+Best regards,
+
+${SIG}`,
+    note: 'Low priority: for information only.',
+  },
+  {
+    p: 3, name: 'Dr Sermed Mezher', sub: 'TikTok @drsermedmezherexplains · 18,200 followers · made a misophonia video',
+    link: 'https://www.tiktok.com/@drsermedmezherexplains/video/7442065506351222048',
+    channel: 'Email', address: 'hello@sermedmezher.com',
+    subject: 'Sponsored video: a tool that reduces mouth sounds in YouTube videos',
+    message: `Hi Dr Mezher,
+
+My name is Ange Ndoudi, founder of CalmEar. I have misophonia, and your video "When Chewing Bites on Your Brain" explained what it feels like better than most things I've seen.
+
+CalmEar is a Chrome extension that detects mouth smacks in YouTube videos and reduces them as the video plays. The detection runs on the user's computer and no audio is uploaded.
+
+I'd like to sponsor a video on your channel:
+- You try CalmEar first, with free access for as long as you need. If you don't find it worthwhile, no hard feelings.
+- If you do, one video in your own words, with an honest take and a warning before any mouth sounds you play.
+- A personal link for your audience, so we can measure results.
+- The video would be labelled as sponsored, of course.
+
+As a solo founder my budget is modest, but I'd rather pay fairly. Could you share your rates for a sponsored TikTok?
+
+${DEMO}
+
+Best regards,
+
+${SIG}`,
+    note: 'Best value for a first paid sponsorship. Decide your maximum budget before he replies.',
+  },
+  {
+    p: 3, name: 'Abby Wenzel', sub: 'TikTok @itsabbywenzel · 18,300 followers · lifestyle, UGC',
+    link: 'https://www.tiktok.com/@itsabbywenzel',
+    channel: 'Email', address: 'itsabbywenzel@gmail.com',
+    subject: 'Collaboration: a tool for anyone who hates mouth sounds in YouTube videos',
+    message: `Hi Abby,
+
+My name is Ange Ndoudi, founder of CalmEar. I have misophonia, [if you have seen her misophonia video: mention it here, e.g. "and your video about misophonia had me laughing because it is so true"].
+
+CalmEar is a Chrome extension that detects mouth smacks in YouTube videos and reduces them as you watch. Everything runs on the user's computer and no audio is uploaded.
+
+I'd love to work with you on a sponsored video:
+- You try it first. If it's not for you, no problem at all.
+- If you like it, one video in your own style, with a warning before any mouth sounds.
+- A personal link for your audience, and the video labelled as sponsored.
+
+I'm a small, independent brand. Could you share your rates and whether you work with small brands?
+
+${DEMO}
+
+Thank you,
+
+${SIG}`,
+    note: 'Her misophonia video was mentioned by search results but not verified: watch her profile first and only reference it if it exists.',
+  },
+  {
+    p: 3, name: 'Naomi', sub: 'TikTok @rn.naomi · 1,303 followers · nurse, mother',
+    link: 'https://www.tiktok.com/@rn.naomi',
+    channel: 'TikTok message', address: '@rn.naomi',
+    subject: '(private message, no subject)',
+    message: `Hi Naomi! I really enjoy your content. I have misophonia, and mouth sounds in YouTube videos are one of my worst triggers, so I built a small tool that reduces them while you watch. I'd love your honest opinion, and maybe to work together if you like it. Would it be OK if I sent you the details?`,
+    note: 'Her misophonia video was mentioned by search results but not verified. Only send if you have actually seen her content.',
+  },
+  {
+    p: 3, name: 'Dr Courtney Paré', sub: 'TikTok @drcourtneypare · 278,200 followers · anxiety and OCD therapist',
+    link: 'https://www.tiktok.com/@drcourtneypare/video/7211601399761702187',
+    channel: 'TikTok message (no email in her bio)', address: '@drcourtneypare',
+    subject: '(private message, no subject)',
+    message: `Hi Dr Courtney! Your video asking which sounds get to people the most really resonated with me: I have misophonia. I built a small tool that reduces mouth sounds in YouTube videos while you watch, and I'd value your professional opinion on it. Would you be open to me sending the details?`,
+    note: 'Large audience: a paid collaboration is probably beyond your budget. Treat this as a request for her opinion.',
+  },
+  {
+    p: 3, name: 'DoctorSood (via his agency)', sub: 'TikTok @doctorsood · 2.8 million followers · managed by an agency',
+    link: 'https://www.tiktok.com/@doctorsood',
+    channel: 'Email (agency)', address: 'doctorsood@dttalent.com',
+    subject: 'Sponsorship enquiry: CalmEar, a tool that reduces mouth sounds in YouTube videos',
+    message: `Hello,
+
+My name is Ange Ndoudi, founder of CalmEar, a Chrome extension that detects mouth smacks in YouTube videos and reduces them as the video plays. It is aimed at people with misophonia, and all processing happens on the user's computer.
+
+I'd like to enquire about a sponsored video with DoctorSood. Could you share rates, formats and availability?
+
+Some context: CalmEar is a comfort tool, not a medical treatment, so the content would need to avoid medical claims. The video would be clearly labelled as sponsored, and the creator would be free to try the product first and give an honest opinion.
+
+${DEMO}
+
+Best regards,
+
+${SIG}`,
+    note: 'Likely beyond your budget: send only if you want to know their rates for later.',
+  },
+];
+
+const lists = [
+  {
+    p: 1, name: 'Demystifying Misophonia: "Misophonia Moment Tools"', sub: 'Sara Barrick · page listing practical tools for misophonia triggers',
+    link: 'https://demystifyingmisophonia.com/toolbelt-items',
+    channel: 'Contact form', address: 'demystifyingmisophonia.com',
+    subject: 'A tool suggestion for your Misophonia Moment Tools page',
+    message: `Hi Sara,
+
+My name is Ange Ndoudi. I have misophonia, and I found your "Misophonia Moment Tools" page while looking for practical ways to cope with triggers. [Mention one tool from the page that you use or found helpful.]
+
+Mouth sounds in YouTube videos have always been one of my hardest triggers, so I built CalmEar, a Chrome extension for desktop that detects mouth smacks and lip smacking in YouTube videos and reduces them as the video plays. All processing happens on the user's computer; no audio is recorded or uploaded. It is a comfort tool, not a treatment.
+
+If you think it could help your readers, I'd be grateful if you would consider adding it to your page. I'm happy to give you free access to try it first, and I'd welcome your honest feedback, including what it still misses.
+
+${DEMO}
+
+Thank you for the work you do for people with misophonia,
+
+${SIG}`,
+    note: 'The best fit in this section: a page that already lists tools for exactly this situation.',
+  },
+  {
+    p: 1, name: 'Misophonia Treatment NYC: "Technological Aids for Managing Misophonia"', sub: 'Article by Brandon Lipton · Misophonia Cognitive Center (Stephen Geller Katz, LCSW-R)',
+    link: 'https://www.misophoniatreatmentnyc.com/technological-aids-for-managing-misophonia/',
+    channel: 'Phone only (no email or form published)', address: '646-598-2251',
+    subject: 'A practical aid for your article on technological aids for misophonia',
+    message: `Hello,
+
+My name is Ange Ndoudi. I have misophonia, and I read the article "Technological Aids for Managing Misophonia" on your website.
+
+I built CalmEar, a Chrome extension that detects mouth smacks in YouTube videos and reduces them as the video plays, with all processing on the user's computer. It is a comfort tool for one specific situation, not a treatment, so I thought it might fit that article as a practical aid alongside the work your clinicians do.
+
+Would someone on your team be willing to try it, free of charge, and consider it for the article? I'd also value any professional feedback.
+
+${DEMO}
+
+Best regards,
+
+${SIG}`,
+    note: 'Clinic: no sponsorship request, no medical claims. Call to ask for an email address to send this to, or send it on LinkedIn to the article\'s author (find the profile yourself: not verified).',
+  },
+  {
+    p: 2, name: 'Patrick Bushe: two extension lists', sub: '"Best Chrome Extensions for Accessibility in 2026" and "The ADHD Browser Extension Starter Pack" · bushe.co',
+    link: 'https://bushe.co/blog/best-chrome-extensions-for-accessibility-in-2026/',
+    channel: 'Email', address: 'hello@bushe.co',
+    subject: 'Suggestion for your accessibility and ADHD extension lists: CalmEar',
+    message: `Hi Patrick,
+
+My name is Ange Ndoudi. I came across your articles "Best Chrome Extensions for Accessibility in 2026" and "The ADHD Browser Extension Starter Pack" while looking for tools for people with sound sensitivities. [Mention one extension from his lists that you use or found useful.]
+
+I have misophonia, and I built CalmEar, a Chrome extension that detects mouth smacks and lip smacking in YouTube videos and reduces them as the video plays. All processing happens on the user's computer; no audio is recorded or uploaded.
+
+Since your lists focus on making the web more comfortable for people with different needs, I thought CalmEar might be useful to readers who are sensitive to sounds, and in particular to mouth sounds, a common misophonia trigger.
+
+If you'd like to try it, I'm happy to give you free access, and I can send a short description and screenshots for the article.
+
+${DEMO}
+
+Thanks for putting these lists together,
+
+${SIG}`,
+    note: 'Start here in this section: an independent author, a published email, and two relevant lists. ADHD list: bushe.co/blog/the-adhd-browser-extension-starter-pack-essential-tools/',
+  },
+  {
+    p: 2, name: 'OptimaCloud: "Chrome Extensions for Neurodivergent Users"', sub: 'Lee Evans · optimacloud.pro',
+    link: 'https://optimacloud.pro/neurodiversity/best-chrome-extensions-for-neurodivergent-users/',
+    channel: 'Contact form', address: 'optimacloud.pro/contact-us/',
+    subject: 'A sensory comfort extension for your neurodivergent users list',
+    message: `Hi Lee,
+
+My name is Ange Ndoudi. I read your article "Chrome Extensions for Neurodivergent Users" and wanted to suggest a tool for readers dealing with sound sensitivity. [Mention one extension from the article that you found useful.]
+
+I have misophonia, and I built CalmEar, a Chrome extension that detects mouth smacks and lip smacking in YouTube videos and reduces them as the video plays. The rest of the audio is left as it is, so voices stay clear, and all processing happens on the user's computer; no audio is recorded or uploaded.
+
+If you think it fits the article, I'd be grateful if you would consider adding it. I'm happy to give you free access to try it first, and to send a short description and screenshots.
+
+${DEMO}
+
+Thank you,
+
+${SIG}`,
+    note: 'Angle: sensory comfort, which fits a neurodiversity list better than productivity.',
+  },
+  {
+    p: 2, name: 'TechTippr: "7 Best Chrome Extensions for ADHD Productivity in 2026"', sub: 'Asif Ahmed · techtippr.com · also sells advertising',
+    link: 'https://techtippr.com/best-chrome-extensions-adhd-productivity/',
+    channel: 'Contact form', address: 'techtippr.com/contact/',
+    subject: 'Suggestion for your ADHD Chrome extensions article',
+    message: `Hi Asif,
+
+My name is Ange Ndoudi. I read your article "7 Best Chrome Extensions for ADHD Productivity in 2026" and wanted to suggest a tool for readers who find certain sounds in videos distracting or hard to tolerate.
+
+I built CalmEar, a Chrome extension that detects mouth smacks and lip smacking in YouTube videos, for example in lectures, tutorials and talking-head videos, and reduces them as the video plays. All processing happens on the user's computer; no audio is recorded or uploaded.
+
+If you update the article, I'd be grateful if you would consider CalmEar for it. I'm happy to give you free access to try it, and to send a short description and screenshots.
+
+${DEMO}
+
+Thank you,
+
+${SIG}`,
+    note: 'Their "Advertise" page (techtippr.com/advertise/) offers paid placements. Ask for a free listing first; any paid placement must be labelled as an ad.',
+  },
+  {
+    p: 3, name: 'Attention Insight: "Best Chrome Accessibility Extensions (2026)"', sub: 'Greta Makarskaite · company blog, list aimed mostly at accessibility testing',
+    link: 'https://attentioninsight.com/chrome-accessibility-extensions-2026/',
+    channel: 'Email (support address) or contact form', address: 'support@attentioninsight.com',
+    subject: 'For Greta Makarskaite: a suggestion for your Chrome accessibility extensions article',
+    message: `Hello,
+
+Could you please pass this message on to Greta Makarskaite, the author of "Best Chrome Accessibility Extensions (2026)"? Thank you.
+
+Hi Greta,
+
+My name is Ange Ndoudi. I read your article on Chrome accessibility extensions and wanted to suggest a tool for users with sound sensitivities.
+
+I have misophonia, and I built CalmEar, a Chrome extension that detects mouth smacks and lip smacking in YouTube videos and reduces them as the video plays. All processing happens on the user's computer; no audio is recorded or uploaded.
+
+If you update the article, I'd be grateful if you would consider it. I'm happy to give you free access to try it, and to send a short description and screenshots.
+
+${DEMO}
+
+Best regards,
+
+${SIG}`,
+    note: 'Weak fit: the list is mainly for developers testing accessibility, and the address is a support inbox. Low chance of a reply.',
+  },
+  {
+    p: 3, name: 'FolderTube: "Best Chrome Extensions to Improve YouTube (2026 Edition)"', sub: 'Company blog · sells its own YouTube extension',
+    link: 'https://foldertube.com/blog/best-chrome-extensions-for-youtube',
+    channel: 'No contact found', address: 'No email or form found on foldertube.com',
+    subject: 'Suggestion for your list of Chrome extensions for YouTube',
+    message: `Hello,
+
+My name is Ange Ndoudi. I read your article "Best Chrome Extensions to Improve YouTube (2026 Edition)" and wanted to suggest an extension that might interest your readers.
+
+CalmEar detects mouth smacks and lip smacking in YouTube videos and reduces them as the video plays. It is made for people with misophonia and anyone bothered by mouth sounds, and all processing happens on the user's computer; no audio is recorded or uploaded.
+
+If you update the article, I'd be grateful if you would consider adding it. I'm happy to give you free access to try it, and to send a short description and screenshots.
+
+${DEMO}
+
+Best regards,
+
+${SIG}`,
+    note: 'Look for a support email on their Chrome Web Store listing before giving up. Low priority: they compete for attention with their own extension.',
+  },
+];
+
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+function render(items, tbodyId) {
+const rows = document.getElementById(tbodyId);
+items.forEach((c) => {
+  const tr = document.createElement('tr');
+  tr.dataset.p = String(c.p);
+  const isEmail = c.address.includes('@') && !c.address.startsWith('@');
+  tr.innerHTML = `
+    <td><span class="prio p${c.p}">P${c.p}</span></td>
+    <td><div class="name"><a href="${esc(c.link)}" target="_blank" rel="noopener">${esc(c.name)}</a></div><div class="sub">${esc(c.sub)}</div></td>
+    <td class="channel">${esc(c.channel)}<br><code>${esc(c.address)}</code>${isEmail ? `<div class="actions"><button class="copy" data-copy="addr">Copy address</button></div>` : ''}</td>
+    <td class="subject">${esc(c.subject)}</td>
+    <td>
+      <details><summary>Show message</summary><div class="msg">${esc(c.message)}</div></details>
+      <div class="actions">
+        <button class="copy" data-copy="msg">Copy message</button>
+        ${c.subject.startsWith('(') ? '' : `<button class="copy" data-copy="subj">Copy subject</button>`}
+      </div>
+      ${c.note ? `<div class="note">${esc(c.note)}</div>` : ''}
+    </td>`;
+  rows.appendChild(tr);
+  tr.querySelectorAll('.copy').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const kind = btn.dataset.copy;
+      const text = kind === 'addr' ? c.address : kind === 'subj' ? c.subject : c.message;
+      try { await navigator.clipboard.writeText(text) } catch { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove() }
+      const label = btn.textContent;
+      btn.textContent = 'Copied';
+      btn.classList.add('done');
+      setTimeout(() => { btn.textContent = label; btn.classList.remove('done') }, 1500);
+    });
+  });
+});
+}
+
+render(contacts, 'rows');
+render(lists, 'list-rows');
+
+document.querySelectorAll('.filters').forEach((group) => {
+  const rows = document.getElementById(group.dataset.target);
+  group.querySelectorAll('button').forEach((b) => {
+    b.addEventListener('click', () => {
+      group.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      const f = b.dataset.filter;
+      rows.querySelectorAll('tr').forEach(tr => { tr.style.display = f === 'all' || tr.dataset.p === f ? '' : 'none' });
+    });
+  });
+});
+</script>
+</body>
+</html>
