@@ -33,7 +33,7 @@
   .table th, .table td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--border); }
   .table th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--dim); background: var(--bg); }
   .table tr:last-child td { border-bottom: 0; }
-  .prio { display: inline-block; font-weight: 700; font-size: 12px; border-radius: 999px; padding: 2px 9px; color: #fff; }
+  .prio { display: inline-block; white-space: nowrap; font-weight: 700; font-size: 12px; border-radius: 999px; padding: 2px 9px; color: #fff; }
   .prio.p1 { background: var(--p1); } .prio.p2 { background: var(--p2); } .prio.p3 { background: var(--p3); }
   .name { font-weight: 600; }
   .sub { color: var(--dim); font-size: 13px; }
@@ -95,6 +95,23 @@
   <table class="table">
     <thead><tr><th>Priority</th><th>List and author</th><th>Channel</th><th>Subject</th><th>Message</th></tr></thead>
     <tbody id="list-rows"></tbody>
+  </table>
+
+  <h2>New users: check-in emails</h2>
+  <p class="intro">Personal emails to people who created an account, sent from your own address so they can simply reply. Find new accounts in Supabase: the <b>users</b> table (column <b>created_at</b>; ignore rows whose <b>version</b> is "development"). An account has the extension connected when it has a row in <b>extension_sessions</b> that is not revoked and not expired; the dashboard shows the same thing.</p>
+  <div class="rules">
+    <b>Before sending</b>
+    <ul>
+      <li>Plain text, no tracking links, one person at a time, and only one check-in per person. Never add them to a mailing list.</li>
+      <li>Keep it about their experience with CalmEar: no promotion, no discount offer.</li>
+      <li>Your privacy policy does not yet say that you may email account holders about their experience. Add a line to "How we use your data" before sending, and have it reviewed.</li>
+      <li>Write down the answers next to the answers from the feedback and uninstall forms, to spot patterns.</li>
+    </ul>
+  </div>
+
+  <table class="table">
+    <thead><tr><th>When</th><th>Situation</th><th>Channel</th><th>Subject</th><th>Message</th></tr></thead>
+    <tbody id="checkin-rows"></tbody>
   </table>
 </main>
 
@@ -548,6 +565,54 @@ ${SIG}`,
   },
 ];
 
+const checkins = [
+  {
+    tag: 'Day 2 to 3', name: 'Account created, extension connected', sub: 'The person is set up: thank them and ask how it is going',
+    channel: 'Email from your own address', address: 'The user\'s email (Supabase, users table)',
+    subject: 'How is CalmEar working for you?',
+    message: `Hi [first name, or just "Hi"],
+
+I'm Ange, the founder of CalmEar. You created an account a couple of days ago, so I wanted to say thank you and check in personally.
+
+I have misophonia myself, and I built CalmEar because mouth sounds in YouTube videos were one of my hardest triggers. It's still a young product, so your experience really matters to me.
+
+Could you reply with a few words on these?
+1. Has CalmEar reduced the mouth sounds in the videos you watch?
+2. Did anything not work, or sound strange?
+3. If you could change one thing, what would it be?
+
+If it missed sounds in a particular video, the link and the time (for example 2:15) help me a lot to improve detection.
+
+Just hit reply: I read and answer every email myself.
+
+Thank you,
+
+${SIG}`,
+    note: 'The most useful email of the two: these people are your future reviewers and subscribers. If they reply happily, thank them and, only then, ask whether they would leave an honest rating on the Chrome Web Store.',
+  },
+  {
+    tag: 'Day 2 to 3', name: 'Account created, extension not connected', sub: 'The person signed up but never connected the extension: offer help',
+    channel: 'Email from your own address', address: 'The user\'s email (Supabase, users table)',
+    subject: 'Need a hand setting up CalmEar?',
+    message: `Hi [first name, or just "Hi"],
+
+I'm Ange, the founder of CalmEar. Thank you for creating an account! It looks like CalmEar isn't connected to your account yet, so I wanted to check whether something got in the way.
+
+Setting it up takes two steps on a computer with Google Chrome:
+1. Add CalmEar to Chrome: https://chromewebstore.google.com/detail/calmear/akppnpmbcmoomehdedbdgcjfhdhfiedo
+2. Click the CalmEar icon in Chrome's toolbar, then "Sign in / Create account". If you can't see the icon, click the puzzle piece in the toolbar and pin CalmEar.
+
+CalmEar only works in Chrome on a computer for now, so if you signed up on your phone, it will be ready when you're at your desk.
+
+Did something stop you, or was it just not the right moment? Even a one-line reply helps me make CalmEar easier to start with.
+
+Thank you,
+
+${SIG}`,
+    note: 'Their answers tell you where the setup loses people. Send only once: if they don\'t reply, leave it there.',
+  },
+];
+
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
 function render(items, tbodyId) {
@@ -557,8 +622,8 @@ items.forEach((c) => {
   tr.dataset.p = String(c.p);
   const isEmail = c.address.includes('@') && !c.address.startsWith('@');
   tr.innerHTML = `
-    <td><span class="prio p${c.p}">P${c.p}</span></td>
-    <td><div class="name"><a href="${esc(c.link)}" target="_blank" rel="noopener">${esc(c.name)}</a></div><div class="sub">${esc(c.sub)}</div></td>
+    <td>${c.tag ? `<span class="prio p1">${esc(c.tag)}</span>` : `<span class="prio p${c.p}">P${c.p}</span>`}</td>
+    <td><div class="name">${c.link ? `<a href="${esc(c.link)}" target="_blank" rel="noopener">${esc(c.name)}</a>` : esc(c.name)}</div><div class="sub">${esc(c.sub)}</div></td>
     <td class="channel">${esc(c.channel)}<br><code>${esc(c.address)}</code>${isEmail ? `<div class="actions"><button class="copy" data-copy="addr">Copy address</button></div>` : ''}</td>
     <td class="subject">${esc(c.subject)}</td>
     <td>
@@ -586,6 +651,7 @@ items.forEach((c) => {
 
 render(contacts, 'rows');
 render(lists, 'list-rows');
+render(checkins, 'checkin-rows');
 
 document.querySelectorAll('.filters').forEach((group) => {
   const rows = document.getElementById(group.dataset.target);
