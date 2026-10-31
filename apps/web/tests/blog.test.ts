@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { buildPost, listPosts, parseFrontMatter, toMeta } from '../server/utils/blog'
+import { buildPost, listPosts, parseFrontMatter, toMeta, unlinkHiddenPosts } from '../server/utils/blog'
 
 const post = (fm: string, body = 'Hello **world**.') => `---\n${fm}\n---\n\n${body}\n`
 const valid = 'title: "Headphones for misophonia: what helps"\ndescription: A short summary.\ndate: 2026-11-10'
@@ -60,5 +60,24 @@ describe('content/blog/_template.md', () => {
   it('is a valid post, so copying it gives a working starting point', () => {
     const source = readFileSync(new URL('../content/blog/_template.md', import.meta.url), 'utf8')
     expect(buildPost('template.md', source).draft).toBe(true)
+  })
+})
+
+describe('unlinkHiddenPosts', () => {
+  it('keeps links to visible posts and turns links to hidden ones into text', () => {
+    const html = '<p><a href="/blog/live-post">Live</a>, <a href="/blog/draft-post">Draft</a>, <a href="/#demo">Demo</a></p>'
+    expect(unlinkHiddenPosts(html, new Set(['live-post']))).toBe('<p><a href="/blog/live-post">Live</a>, Draft, <a href="/#demo">Demo</a></p>')
+  })
+})
+
+describe('HTML comments', () => {
+  it('are removed from the published HTML', () => {
+    const p = buildPost('with-notes.md', post(valid, `Visible.
+
+<!-- private writing note -->
+
+Also visible.`))
+    expect(p.html).not.toContain('private writing note')
+    expect(p.html).toContain('Also visible.')
   })
 })

@@ -69,7 +69,10 @@ export function buildPost(fileName: string, source: string): BlogPost {
   const slug = fileName.replace(/\.md$/, '')
   if (!SLUG_RE.test(slug)) throw new Error(`Blog post "${fileName}": the file name must be lowercase words separated by hyphens.`)
 
-  const { data, body } = parseFrontMatter(source)
+  const parsed = parseFrontMatter(source)
+  const data = parsed.data
+  // Writing notes in <!-- comments --> are never published, not even in the page source
+  const body = parsed.body.replace(/<!--[\s\S]*?-->/g, '')
   const text = (key: string) => (typeof data[key] === 'string' ? (data[key] as string) : '')
   for (const key of ['title', 'description', 'date']) {
     if (!text(key)) throw new Error(`Blog post "${fileName}": missing "${key}" in the front matter.`)
@@ -99,6 +102,16 @@ export function listPosts(posts: BlogPost[], includeDrafts: boolean): BlogPost[]
     .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : a.slug.localeCompare(b.slug)))
 }
 
+/**
+ * Turns links to blog posts that are not visible (drafts, missing files)
+ * into plain text, so posts can be published one at a time without broken
+ * links. Pure.
+ */
+export function unlinkHiddenPosts(html: string, visibleSlugs: Set<string>): string {
+  return html.replace(/<a href="\/blog\/([a-z0-9-]+)\/?"[^>]*>([\s\S]*?)<\/a>/g, (link, slug: string, text: string) =>
+    visibleSlugs.has(slug) ? link : text)
+}
+
 export function toMeta({ html: _html, ...meta }: BlogPost): BlogPostMeta {
   return meta
 }
@@ -122,5 +135,7 @@ export async function loadPosts(): Promise<BlogPost[]> {
 
 /** Published posts, plus drafts in dev. */
 export async function getVisiblePosts(): Promise<BlogPost[]> {
-  return listPosts(await loadPosts(), import.meta.dev)
+  const posts = listPosts(await loadPosts(), import.meta.dev)
+  const visible = new Set(posts.map(p => p.slug))
+  return posts.map(p => ({ ...p, html: unlinkHiddenPosts(p.html, visible) }))
 }

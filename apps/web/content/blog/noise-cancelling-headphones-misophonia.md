@@ -23,7 +23,7 @@ I have misophonia, and mouth sounds are my hardest trigger. This guide explains 
 
 Misophonia was given a consensus definition by an international panel of researchers and clinicians in 2022: a disorder of "decreased tolerance to specific sounds or stimuli associated with such sounds" ([Swedo et al., Frontiers in Neuroscience](https://www.frontiersin.org/articles/10.3389/fnins.2022.841816/full)). It is more common than most people think. In a UK study, about 18% of adults had misophonia symptoms that caused a significant burden in their life, yet only 13.6% had heard the word before ([Vitoratou et al., PLOS ONE, 2023](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0282777)).
 
-The sounds behind it are remarkably consistent. In one of the largest clinical samples studied, 96% of people with misophonia were triggered by eating sounds, and 85% by nasal and breathing sounds ([Jager et al., PLOS ONE, 2020](https://pmc.ncbi.nlm.nih.gov/articles/PMC7159231/)).
+The sounds behind it are remarkably consistent. In one of the largest clinical samples studied, 96% of people with misophonia were triggered by eating sounds, and 85% by nasal and breathing sounds ([Jager et al., PLOS ONE, 2020](https://pmc.ncbi.nlm.nih.gov/articles/PMC7159231/)). I explain why chewing in particular affects some of us so much in [why do chewing sounds bother me so much?](/blog/why-do-chewing-sounds-bother-me)
 
 That is exactly where headphones struggle. Active noise cancellation works by producing "anti-noise" that cancels the incoming sound wave. That works well for long, low wavelengths, which is why it shines against engines and traffic. Higher-pitched sounds have much shorter wavelengths, which makes it much harder to time the anti-noise correctly. RTINGS, which measures headphones in a lab, puts it simply: in the mid range "you may not notice quite as much of a difference between ANC on and off, the higher frequency you go", and in the treble range most of the blocking comes from the headphones' physical seal rather than the electronics ([RTINGS noise isolation test](https://www.rtings.com/headphones/tests/isolation/noise-isolation-cancellation-passive-active)).
 
@@ -78,7 +78,7 @@ Here is how the different tools fit together depending on where you are:
 
 ## When to get more help
 
-Headphones and earplugs make daily life easier, but they don't change how your brain reacts to triggers. If misophonia affects your work, your relationships or your mood, it is worth talking to a professional. Cognitive behavioural therapy has the strongest evidence so far: in the first randomised clinical trial of CBT for misophonia, symptoms improved significantly, and the improvement was still there a year later ([Jager et al., Depression and Anxiety, 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC8359510/)).
+Headphones and earplugs make daily life easier, but they don't change how your brain reacts to triggers. If misophonia affects your work, your relationships or your mood, it is worth talking to a professional. Cognitive behavioural therapy has the strongest evidence so far: in the first randomised clinical trial of CBT for misophonia, symptoms improved significantly, and the improvement was still there a year later ([Jager et al., Depression and Anxiety, 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC8359510/)). For more everyday strategies, see [how to deal with misophonia day to day](/blog/how-to-deal-with-misophonia).
 
 ## Frequently asked questions
 
