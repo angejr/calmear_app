@@ -43,6 +43,13 @@ async function handleSignOut() {
             >
               Download
             </NuxtLink>
+            <NuxtLink
+              to="/blog"
+              class="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors"
+              active-class="text-primary-600"
+            >
+              Blog
+            </NuxtLink>
 
             <template v-if="isSignedIn">
               <NuxtLink to="/dashboard" class="btn-secondary text-xs py-2 px-4">
@@ -99,6 +106,11 @@ async function handleSignOut() {
               class="block px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 rounded-lg"
               @click="isMenuOpen = false"
             >Download</NuxtLink>
+            <NuxtLink
+              to="/blog"
+              class="block px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 rounded-lg"
+              @click="isMenuOpen = false"
+            >Blog</NuxtLink>
             <div class="pt-2 border-t border-neutral-100 flex flex-col gap-2">
               <template v-if="isSignedIn">
                 <NuxtLink to="/dashboard" class="btn-secondary justify-center" @click="isMenuOpen = false">
@@ -139,6 +151,7 @@ async function handleSignOut() {
           <div class="flex gap-4 text-xs text-neutral-500">
             <NuxtLink to="/pricing" class="hover:text-neutral-700">Pricing</NuxtLink>
             <NuxtLink to="/download" class="hover:text-neutral-700">Download</NuxtLink>
+            <NuxtLink to="/blog" class="hover:text-neutral-700">Blog</NuxtLink>
             <NuxtLink to="/feedback" class="hover:text-neutral-700">Feedback</NuxtLink>
             <NuxtLink to="/privacy" class="hover:text-neutral-700">Privacy</NuxtLink>
           </div>

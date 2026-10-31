@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import typography from '@tailwindcss/typography'
 
 export default {
   content: [
@@ -46,5 +47,6 @@ export default {
       },
     },
   },
-  plugins: [],
+  // Styles the Markdown of blog posts (class="prose")
+  plugins: [typography],
 } satisfies Config

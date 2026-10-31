@@ -53,6 +53,11 @@ export default defineNuxtConfig({
       gtmId: process.env.NUXT_PUBLIC_GTM_ID || '',
     },
   },
+  nitro: {
+    // Blog posts (content/blog/*.md) are bundled with the server and read with
+    // useStorage('assets:blog'), see server/utils/blog.ts.
+    serverAssets: [{ baseName: 'blog', dir: fileURLToPath(new URL('./content/blog', import.meta.url)) }],
+  },
   devServerHandlers: [
     { route: DEMO_MODEL_DEV_ROUTE, handler: demoModelDevHandler(fileURLToPath(new URL('.', import.meta.url))) },
   ],
