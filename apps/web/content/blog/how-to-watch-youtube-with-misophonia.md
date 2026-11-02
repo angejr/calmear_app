@@ -2,7 +2,7 @@
 title: "How to Watch YouTube with Misophonia: A Practical Guide"
 description: Practical ways to watch YouTube with misophonia when creators smack their lips, eat or click into the mic, from YouTube settings to fixing the audio itself.
 date: 2026-10-31
-draft: true
+draft: false
 ---
 
 Watching YouTube with misophonia gets easier when you combine three things: YouTube's own settings to see fewer triggering videos, captions and transcripts to follow a video without its sound, and a tool that reduces the mouth sounds in the audio itself. Headphones don't help here, and YouTube has no setting that filters out mouth sounds, so it's worth knowing what each option can and can't do.

@@ -2,7 +2,7 @@
 title: "How to Deal with Misophonia: 10 Practical Strategies"
 description: There's no cure for misophonia yet, but daily life can get much easier. Practical, research-backed ways to cope at home, at work and online.
 date: 2026-10-31
-draft: true
+draft: false
 ---
 
 There's no cure for misophonia yet, but there is a lot you can do to make daily life easier. What helps most is a mix: understanding what's happening when you're triggered, using sound to cushion triggers, keeping earplugs for specific moments, giving yourself a way out, looking after stress and tiredness, talking to the people around you, and considering therapy if misophonia is taking over.

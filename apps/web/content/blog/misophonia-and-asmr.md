@@ -2,7 +2,7 @@
 title: "Misophonia and ASMR: Same Sounds, Opposite Reactions"
 description: Why do mouth sounds relax some people and enrage others? What research says about ASMR and misophonia, why they overlap, and whether you can have both.
 date: 2026-10-31
-draft: true
+draft: false
 ---
 
 ASMR and misophonia are reactions to the same kind of sounds, going in opposite directions. ASMR is a pleasant, tingling, relaxing response to sounds like whispering or crisp tapping. Misophonia is a strong negative reaction, such as anger or disgust, to specific sounds like chewing or lip smacking. Researchers have noticed that both are triggered mainly by sounds people make, that mouth sounds sit right at the crossroads, and that many people experience both.

@@ -2,7 +2,7 @@
 title: "What Watching YouTube Is Like When You Have Misophonia"
 description: Mouth sounds in YouTube videos are my hardest misophonia trigger. What it feels like, the workarounds I tried, and why I ended up building a tool for it.
 date: 2026-10-31
-draft: true
+draft: false
 ---
 
 <!--
@@ -11,7 +11,7 @@ ANGE: this article is your story, so it needs your words. Everything in
 true (you have misophonia, mouth sounds in YouTube videos are your hardest
 trigger, you built CalmEar). Delete any sentence that doesn't match your
 experience. Keep it simple and honest: this is the article people share.
-Remove "draft: true" only when no [brackets] are left.
+Remove "draft: false" only when no [brackets] are left.
 -->
 
 I have misophonia, and my hardest trigger is mouth sounds. Not loud ones: the small, wet ones. A lip smack before a sentence. Someone talking while they eat. And the place I run into them most isn't the dinner table. It's YouTube.

@@ -2,7 +2,7 @@
 title: The title shown in Google and at the top of the article
 description: One or two sentences (about 150 characters) shown under the title in Google and on the blog page.
 date: 2026-11-10
-draft: true
+draft: false
 ---
 
 <!--
@@ -16,7 +16,7 @@ HOW TO PUBLISH AN ARTICLE
    - title, description and date (YYYY-MM-DD) are required.
    - updated: 2026-12-01   add this line when you revise an article.
    - author: defaults to Ange Ndoudi.
-   - draft: true  means the article is only visible on your computer (npm run dev).
+   - draft: false  means the article is only visible on your computer (npm run dev).
      Remove the line (or write draft: false) to publish it.
 3. Write the article in Markdown below, then deploy the website.
 

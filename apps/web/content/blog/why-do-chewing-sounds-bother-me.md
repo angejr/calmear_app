@@ -2,7 +2,7 @@
 title: "Why Do Chewing Sounds Bother Me So Much? It May Be Misophonia"
 description: If chewing sounds make you angry or disgusted far more than other people, you may have misophonia. What it is, why chewing is the top trigger, and what helps.
 date: 2026-10-31
-draft: true
+draft: false
 ---
 
 If the sound of someone chewing makes you instantly irritated, angry or disgusted, far more than it seems to bother anyone else, you may have misophonia. It's a condition in which specific sounds trigger strong negative reactions, and eating sounds are by far the most common trigger. It isn't rudeness or impatience, it isn't a phobia, and you're far from alone: in a UK study, about 18% of adults had misophonia symptoms that caused a significant burden in their life.

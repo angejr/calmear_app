@@ -2,7 +2,7 @@
 title: "Signs of Misophonia: How to Know If You Have It"
 description: The main signs of misophonia, common trigger examples, how it differs from hyperacusis, and the questionnaires clinicians use. Not a test, but a clear guide.
 date: 2026-10-31
-draft: true
+draft: false
 ---
 
 The main signs of misophonia are strong, immediate reactions, usually irritation, anger or disgust, to specific sounds that most people barely notice, most often other people's eating, mouth or breathing sounds. The reaction feels out of proportion and hard to control, it often comes with physical tension, and it tends to be worse with certain people. Symptoms usually start in childhood or the early teens.
